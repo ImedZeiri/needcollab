@@ -1,6 +1,13 @@
 import encryptionService from './encryptionService';
 import cacheService from './cacheService';
-import { API_URL, BEARER_TOKEN, API_KEY, API_INTERNAL_TOKEN } from '@/config/environment';
+import { API_URL, BEARER_TOKEN, API_KEY } from '@/config/environment';
+import { ENCRYPTION_SECRET } from '@/config/environment';
+
+function generateInternalToken(): string {
+  const slot = Math.floor(Date.now() / 60000);
+  const raw = `${slot}:${ENCRYPTION_SECRET}`;
+  return btoa(raw);
+}
 
 class ApiRequestService {
   async request<T = unknown>(endpoint: string, options: RequestInit = {}, ttl = 300000): Promise<T> {
@@ -22,7 +29,7 @@ class ApiRequestService {
       'apikey': API_KEY,
       'Content-Type': 'application/json',
       'Prefer': 'return=representation',
-      'x-internal-token': API_INTERNAL_TOKEN,
+      'x-internal-token': generateInternalToken(),
       ...(options.headers as Record<string, string> || {}),
     };
 

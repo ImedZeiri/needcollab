@@ -2,4 +2,3 @@ export const API_URL = import.meta.env.VITE_API_URL || 'https://webserver-needco
 export const BEARER_TOKEN = import.meta.env.VITE_BEARER_TOKEN || '';
 export const API_KEY = import.meta.env.VITE_API_KEY || '';
 export const ENCRYPTION_SECRET = 'secret-key';
-export const API_INTERNAL_TOKEN = import.meta.env.VITE_API_INTERNAL_TOKEN || '';
