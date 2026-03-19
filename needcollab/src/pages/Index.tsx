@@ -3,7 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowRight, Search, Handshake, MessageSquare, Shield } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 
 const Index = () => {
   const { isAuthenticated } = useAuth();
@@ -21,10 +21,13 @@ const Index = () => {
       <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-accent/5 px-4 py-24 md:py-32">
         <div className="container text-center">
           <h1 className="mx-auto max-w-3xl text-4xl font-extrabold tracking-tight md:text-6xl">
-            {t('index.headline', {
-              needs: (chunks: string) => <span className="text-primary">{chunks}</span>,
-              offers: (chunks: string) => <span className="text-accent">{chunks}</span>,
-            })}
+            <Trans
+              i18nKey="index.headline"
+              components={{
+                needs: <span className="text-primary" />,
+                offers: <span className="text-accent" />,
+              }}
+            />
           </h1>
           <p className="mx-auto mt-6 max-w-xl text-lg text-muted-foreground">{t('index.subheadline')}</p>
           <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">

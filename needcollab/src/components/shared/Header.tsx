@@ -11,6 +11,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useTranslation } from 'react-i18next';
 
 export default function Header() {
@@ -19,10 +26,9 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { t, i18n } = useTranslation();
 
-  const toggleLang = () => {
-    const next = i18n.language === 'fr' ? 'en' : 'fr';
-    i18n.changeLanguage(next);
-    localStorage.setItem('lang', next);
+  const handleLangChange = (lang: string) => {
+    i18n.changeLanguage(lang);
+    localStorage.setItem('lang', lang);
   };
 
   const navLinks = isAuthenticated
@@ -55,9 +61,15 @@ export default function Header() {
         </div>
 
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="sm" onClick={toggleLang} className="text-xs font-semibold">
-            {i18n.language === 'fr' ? 'EN' : 'FR'}
-          </Button>
+          <Select value={i18n.language} onValueChange={handleLangChange}>
+            <SelectTrigger className="h-8 w-[70px] text-xs font-semibold">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="fr">FR</SelectItem>
+              <SelectItem value="en">EN</SelectItem>
+            </SelectContent>
+          </Select>
           {isAuthenticated ? (
             <>
               <Button variant="ghost" size="icon" className="relative">
