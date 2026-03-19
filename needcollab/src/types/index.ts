@@ -6,7 +6,7 @@ export interface Need {
   budget: number;
   currency: string;
   location: string;
-  status: 'open' | 'in_progress' | 'closed';
+  status: 'open' | 'in_progress' | 'closed' | 'published' | 'finalised';
   createdAt: string;
   updatedAt: string;
   authorId: string;

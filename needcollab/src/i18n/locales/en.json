@@ -115,7 +115,9 @@
     "status": {
       "open": "Open",
       "in_progress": "In progress",
-      "closed": "Closed"
+      "closed": "Closed",
+      "published": "Published",
+      "finalised": "Finalised"
     }
   },
   "needDetail": {
@@ -220,7 +222,9 @@
       "status": {
         "open": "Open",
         "in_progress": "In progress",
-        "closed": "Closed"
+        "closed": "Closed",
+        "published": "Published",
+        "finalised": "Finalised"
       }
     },
     "users": {
