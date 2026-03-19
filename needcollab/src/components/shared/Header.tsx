@@ -26,10 +26,9 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { t, i18n } = useTranslation();
 
-  const toggleLang = () => {
-    const next = i18n.language === 'fr' ? 'en' : 'fr';
-    i18n.changeLanguage(next);
-    localStorage.setItem('lang', next);
+  const handleLangChange = (lang: string) => {
+    i18n.changeLanguage(lang);
+    localStorage.setItem('lang', lang);
   };
 
   const navLinks = isAuthenticated
