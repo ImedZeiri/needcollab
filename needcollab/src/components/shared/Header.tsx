@@ -61,9 +61,15 @@ export default function Header() {
         </div>
 
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="sm" onClick={toggleLang} className="text-xs font-semibold">
-            {i18n.language === 'fr' ? 'EN' : 'FR'}
-          </Button>
+          <Select value={i18n.language} onValueChange={handleLangChange}>
+            <SelectTrigger className="h-8 w-[70px] text-xs font-semibold">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="fr">FR</SelectItem>
+              <SelectItem value="en">EN</SelectItem>
+            </SelectContent>
+          </Select>
           {isAuthenticated ? (
             <>
               <Button variant="ghost" size="icon" className="relative">
