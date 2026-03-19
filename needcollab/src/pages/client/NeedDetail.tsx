@@ -3,14 +3,27 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, MapPin, Calendar, ThumbsUp, User } from 'lucide-react';
-import { mockNeeds, mockOffers } from '@/data/mockData';
 import { useTranslation } from 'react-i18next';
+import { useState, useEffect } from 'react';
+import { getNeed, getOffers } from '@/services/api';
+import type { Need, Offer } from '@/types';
 
 export default function NeedDetail() {
   const { id } = useParams();
-  const need = mockNeeds.find(n => n.id === id);
-  const offers = mockOffers.filter(o => o.needId === id);
+  const [need, setNeed] = useState<Need | null>(null);
+  const [offers, setOffers] = useState<Offer[]>([]);
+  const [loading, setLoading] = useState(true);
   const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    if (!id) return;
+    Promise.all([
+      getNeed(id).then(d => setNeed(Array.isArray(d) ? d[0] : d as Need)),
+      getOffers(id).then(d => setOffers(Array.isArray(d) ? d : [])),
+    ]).catch(() => {}).finally(() => setLoading(false));
+  }, [id]);
+
+  if (loading) return <div className="container py-16 text-center text-muted-foreground">Chargement...</div>;
 
   if (!need) {
     return (
@@ -38,7 +51,7 @@ export default function NeedDetail() {
               </div>
             </div>
             <div className="text-right">
-              <p className="text-2xl font-bold text-primary">{need.budget.toLocaleString()} {need.currency}</p>
+              <p className="text-2xl font-bold text-primary">{need.budget?.toLocaleString()} {need.currency}</p>
             </div>
           </div>
         </CardHeader>
@@ -76,7 +89,7 @@ export default function NeedDetail() {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-xl font-bold text-primary">{offer.price.toLocaleString()} {offer.currency}</p>
+                    <p className="text-xl font-bold text-primary">{offer.price?.toLocaleString()} {offer.currency}</p>
                     <Badge variant={offer.status === 'accepted' ? 'default' : 'outline'} className="mt-1">
                       {t(`needDetail.offerStatus.${offer.status}`)}
                     </Badge>

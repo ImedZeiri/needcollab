@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -7,16 +7,37 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
+import { createOffer } from '@/services/api';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function CreateOffer() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const { user } = useAuth();
   const [form, setForm] = useState({ title: '', description: '', price: '', deliveryTime: '' });
+  const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success(t('vendor.createOffer.successToast'));
-    navigate('/vendor/offers');
+    setLoading(true);
+    try {
+      await createOffer({
+        ...form,
+        price: Number(form.price),
+        currency: 'EUR',
+        vendorId: user?.id,
+        vendorName: user?.name,
+        needId: searchParams.get('needId') || undefined,
+        status: 'pending',
+      });
+      toast.success(t('vendor.createOffer.successToast'));
+      navigate('/vendor/offers');
+    } catch {
+      toast.error('Erreur lors de la création');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -45,7 +66,7 @@ export default function CreateOffer() {
               </div>
             </div>
             <div className="flex gap-3 pt-4">
-              <Button type="submit" className="flex-1">{t('vendor.createOffer.submit')}</Button>
+              <Button type="submit" className="flex-1" disabled={loading}>{loading ? 'Envoi...' : t('vendor.createOffer.submit')}</Button>
               <Button type="button" variant="outline" onClick={() => navigate(-1)}>{t('common.cancel')}</Button>
             </div>
           </form>

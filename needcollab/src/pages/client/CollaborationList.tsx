@@ -2,22 +2,35 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { MessageSquare } from 'lucide-react';
-import { mockCollaborations } from '@/data/mockData';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useState, useEffect } from 'react';
+import { getCollaborations } from '@/services/api';
+import type { Collaboration } from '@/types';
 
 export default function CollaborationList() {
+  const [collabs, setCollabs] = useState<Collaboration[]>([]);
+  const [loading, setLoading] = useState(true);
   const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    getCollaborations()
+      .then(data => setCollabs(Array.isArray(data) ? data : []))
+      .catch(() => setCollabs([]))
+      .finally(() => setLoading(false));
+  }, []);
 
   return (
     <div className="container py-8">
       <h1 className="mb-6 text-3xl font-bold">{t('collaborations.title')}</h1>
 
-      {mockCollaborations.length === 0 ? (
+      {loading ? (
+        <div className="py-16 text-center text-muted-foreground">Chargement...</div>
+      ) : collabs.length === 0 ? (
         <div className="py-16 text-center text-muted-foreground">{t('collaborations.noCollabs')}</div>
       ) : (
         <div className="space-y-4">
-          {mockCollaborations.map(collab => (
+          {collabs.map(collab => (
             <Card key={collab.id}>
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">

@@ -3,12 +3,35 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Plus, Edit, Trash2 } from 'lucide-react';
-import { mockNeeds } from '@/data/mockData';
 import { useTranslation } from 'react-i18next';
+import { useState, useEffect } from 'react';
+import { getNeeds, deleteNeed } from '@/services/api';
+import { useAuth } from '@/contexts/AuthContext';
+import type { Need } from '@/types';
+import { toast } from 'sonner';
 
 export default function MyNeeds() {
-  const myNeeds = mockNeeds.filter(n => n.authorId === '1');
+  const { user } = useAuth();
+  const [needs, setNeeds] = useState<Need[]>([]);
+  const [loading, setLoading] = useState(true);
   const { t } = useTranslation();
+
+  useEffect(() => {
+    getNeeds()
+      .then(data => setNeeds((Array.isArray(data) ? data : []).filter(n => n.authorId === user?.id)))
+      .catch(() => setNeeds([]))
+      .finally(() => setLoading(false));
+  }, [user?.id]);
+
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteNeed(id);
+      setNeeds(prev => prev.filter(n => n.id !== id));
+      toast.success('Besoin supprimé');
+    } catch {
+      toast.error('Erreur lors de la suppression');
+    }
+  };
 
   return (
     <div className="container py-8">
@@ -17,11 +40,13 @@ export default function MyNeeds() {
         <Button asChild><Link to="/create"><Plus className="mr-2 h-4 w-4" />{t('common.new')}</Link></Button>
       </div>
 
-      {myNeeds.length === 0 ? (
+      {loading ? (
+        <div className="py-16 text-center text-muted-foreground">Chargement...</div>
+      ) : needs.length === 0 ? (
         <div className="py-16 text-center text-muted-foreground">{t('myNeeds.noNeeds')}</div>
       ) : (
         <div className="space-y-4">
-          {myNeeds.map(need => (
+          {needs.map(need => (
             <Card key={need.id}>
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
@@ -29,14 +54,14 @@ export default function MyNeeds() {
                   <div className="flex items-center gap-2">
                     <Badge variant="outline">{t(`needs.status.${need.status}`)}</Badge>
                     <Button variant="ghost" size="icon"><Edit className="h-4 w-4" /></Button>
-                    <Button variant="ghost" size="icon"><Trash2 className="h-4 w-4 text-destructive" /></Button>
+                    <Button variant="ghost" size="icon" onClick={() => handleDelete(need.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
                   </div>
                 </div>
               </CardHeader>
               <CardContent>
                 <p className="mb-3 text-sm text-muted-foreground">{need.description}</p>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="font-medium">{need.budget.toLocaleString()} {need.currency}</span>
+                  <span className="font-medium">{need.budget?.toLocaleString()} {need.currency}</span>
                   <span className="text-muted-foreground">{need.offersCount} {t('needs.offers')} · {need.votesCount} {t('needs.votes')}</span>
                 </div>
                 <Link to={`/needs/${need.id}`}>

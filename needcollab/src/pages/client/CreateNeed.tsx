@@ -9,16 +9,35 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { CATEGORIES } from '@/data/mockData';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
+import { createNeed } from '@/services/api';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function CreateNeed() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [form, setForm] = useState({ title: '', description: '', category: '', budget: '', location: '' });
+  const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success(t('createNeed.successToast'));
-    navigate('/my-needs');
+    setLoading(true);
+    try {
+      await createNeed({
+        ...form,
+        budget: Number(form.budget),
+        currency: 'EUR',
+        authorId: user?.id,
+        authorName: user?.name,
+        status: 'open',
+      });
+      toast.success(t('createNeed.successToast'));
+      navigate('/my-needs');
+    } catch {
+      toast.error('Erreur lors de la création');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -54,7 +73,7 @@ export default function CreateNeed() {
               <Input id="location" value={form.location} onChange={e => setForm(p => ({ ...p, location: e.target.value }))} placeholder={t('createNeed.locationPlaceholder')} />
             </div>
             <div className="flex gap-3 pt-4">
-              <Button type="submit" className="flex-1">{t('common.publish')}</Button>
+              <Button type="submit" className="flex-1" disabled={loading}>{loading ? 'Publication...' : t('common.publish')}</Button>
               <Button type="button" variant="outline" onClick={() => navigate(-1)}>{t('common.cancel')}</Button>
             </div>
           </form>

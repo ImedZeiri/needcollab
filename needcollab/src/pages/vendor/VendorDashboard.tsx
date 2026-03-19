@@ -1,20 +1,38 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { FileText, Package, MessageSquare, TrendingUp } from 'lucide-react';
-import { mockNeeds, mockOffers, mockCollaborations } from '@/data/mockData';
 import { useTranslation } from 'react-i18next';
+import { useState, useEffect } from 'react';
+import { getNeeds, getOffers, getCollaborations } from '@/services/api';
+import { useAuth } from '@/contexts/AuthContext';
+import type { Need, Offer, Collaboration } from '@/types';
 
 export default function VendorDashboard() {
-  const myOffers = mockOffers.filter(o => o.vendorId === '2');
-  const activeCollabs = mockCollaborations.filter(c => c.vendorId === '2' && c.status === 'active');
-  const openNeeds = mockNeeds.filter(n => n.status === 'open');
+  const { user } = useAuth();
+  const [needs, setNeeds] = useState<Need[]>([]);
+  const [myOffers, setMyOffers] = useState<Offer[]>([]);
+  const [activeCollabs, setActiveCollabs] = useState<Collaboration[]>([]);
   const { t } = useTranslation();
+
+  useEffect(() => {
+    getNeeds().then(d => setNeeds((Array.isArray(d) ? d : []).filter(n => n.status === 'open'))).catch(() => {});
+    getOffers().then(d => {
+      const all = Array.isArray(d) ? d : [];
+      setMyOffers(all.filter(o => o.vendorId === user?.id));
+    }).catch(() => {});
+    getCollaborations().then(d => {
+      setActiveCollabs((Array.isArray(d) ? d : []).filter(c => c.vendorId === user?.id && c.status === 'active'));
+    }).catch(() => {});
+  }, [user?.id]);
+
+  const acceptedOffers = myOffers.filter(o => o.status === 'accepted');
+  const acceptanceRate = myOffers.length > 0 ? Math.round((acceptedOffers.length / myOffers.length) * 100) + '%' : '0%';
 
   const stats = [
     { label: t('vendor.dashboard.myOffers'), value: myOffers.length, icon: Package, color: 'text-primary' },
     { label: t('vendor.dashboard.collaborations'), value: activeCollabs.length, icon: MessageSquare, color: 'text-accent' },
-    { label: t('vendor.dashboard.openNeeds'), value: openNeeds.length, icon: FileText, color: 'text-warning' },
-    { label: t('vendor.dashboard.acceptanceRate'), value: '50%', icon: TrendingUp, color: 'text-success' },
+    { label: t('vendor.dashboard.openNeeds'), value: needs.length, icon: FileText, color: 'text-warning' },
+    { label: t('vendor.dashboard.acceptanceRate'), value: acceptanceRate, icon: TrendingUp, color: 'text-success' },
   ];
 
   return (
@@ -37,7 +55,7 @@ export default function VendorDashboard() {
 
       <h2 className="mb-4 text-xl font-semibold">{t('vendor.dashboard.latestNeeds')}</h2>
       <div className="space-y-3">
-        {openNeeds.slice(0, 3).map(need => (
+        {needs.slice(0, 3).map(need => (
           <Card key={need.id}>
             <CardContent className="flex items-center justify-between p-4">
               <div>
@@ -45,7 +63,7 @@ export default function VendorDashboard() {
                 <p className="text-sm text-muted-foreground">{need.category} · {need.location}</p>
               </div>
               <div className="text-right">
-                <p className="font-semibold text-primary">{need.budget.toLocaleString()} {need.currency}</p>
+                <p className="font-semibold text-primary">{need.budget?.toLocaleString()} {need.currency}</p>
                 <Badge variant="outline" className="text-xs">{need.offersCount} {t('needs.offers')}</Badge>
               </div>
             </CardContent>

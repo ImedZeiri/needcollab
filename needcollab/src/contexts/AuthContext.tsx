@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
+import { sendAuthEmail, verifyOtpCode } from '@/services/api';
 
 export type UserRole = 'client' | 'vendor' | 'admin';
 
@@ -22,41 +23,61 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Mock user for development
-const MOCK_USERS: Record<string, User> = {
-  'client@test.com': { id: '1', email: 'client@test.com', name: 'Jean Client', role: 'client' },
-  'vendor@test.com': { id: '2', email: 'vendor@test.com', name: 'Marie Vendor', role: 'vendor' },
-  'admin@test.com': { id: '3', email: 'admin@test.com', name: 'Admin User', role: 'admin' },
-};
+const USER_KEY = 'needcollab_user';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(() => {
+    try { return JSON.parse(localStorage.getItem(USER_KEY) || 'null'); } catch { return null; }
+  });
   const [loading, setLoading] = useState(false);
 
   const login = useCallback(async (email: string) => {
     setLoading(true);
-    // Mock: simulate OTP sent
-    await new Promise(r => setTimeout(r, 500));
-    console.log(`OTP sent to ${email}`);
-    setLoading(false);
+    try {
+      await sendAuthEmail(email);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  const verifyOTP = useCallback(async (email: string, _code: string) => {
+  const verifyOTP = useCallback(async (email: string, code: string) => {
     setLoading(true);
-    await new Promise(r => setTimeout(r, 500));
-    const mockUser = MOCK_USERS[email] || { id: '99', email, name: email.split('@')[0], role: 'client' as UserRole };
-    setUser(mockUser);
-    setLoading(false);
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const result = await verifyOtpCode(code) as any;
+      const profile = Array.isArray(result) ? result[0] : result;
+      if (!profile) throw new Error('Invalid OTP');
+      const loggedUser: User = {
+        id: profile.user_id || profile.id || crypto.randomUUID(),
+        email: profile.email || email,
+        name: profile.full_name || profile.name || email.split('@')[0],
+        role: (profile.role as UserRole) || 'client',
+        avatar: profile.avatar_url,
+      };
+      setUser(loggedUser);
+      localStorage.setItem(USER_KEY, JSON.stringify(loggedUser));
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   const register = useCallback(async (data: { email: string; name: string; role: UserRole }) => {
     setLoading(true);
-    await new Promise(r => setTimeout(r, 500));
-    setUser({ id: crypto.randomUUID(), ...data });
-    setLoading(false);
+    try {
+      await sendAuthEmail(data.email);
+      // Profile will be created after OTP verification
+      const tempUser: User = { id: crypto.randomUUID(), ...data };
+      setUser(tempUser);
+      localStorage.setItem(USER_KEY, JSON.stringify(tempUser));
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  const logout = useCallback(() => { setUser(null); }, []);
+  const logout = useCallback(() => {
+    setUser(null);
+    localStorage.removeItem(USER_KEY);
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, isAuthenticated: !!user, loading, login, verifyOTP, register, logout }}>
