@@ -117,7 +117,8 @@
       "in_progress": "In progress",
       "closed": "Closed",
       "published": "Published",
-      "finalised": "Finalised"
+      "finalised": "Finalised",
+      "finalized": "Finalized"
     }
   },
   "needDetail": {
@@ -224,7 +225,8 @@
         "in_progress": "In progress",
         "closed": "Closed",
         "published": "Published",
-        "finalised": "Finalised"
+        "finalised": "Finalised",
+        "finalized": "Finalized"
       }
     },
     "users": {
