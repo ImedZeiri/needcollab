@@ -14,6 +14,7 @@
   },
   "nav": {
     "marketplace": "Marketplace",
+    "explore": "Explorer",
     "myNeeds": "Mes Besoins",
     "publish": "Publier",
     "dashboard": "Dashboard",
@@ -37,15 +38,22 @@
     "rights": "© 2026 NeedCollab. Tous droits réservés."
   },
   "index": {
+    "badge": "Plateforme collaborative B2B",
     "headline": "Connectez vos <needs>besoins</needs> aux meilleures <offers>offres</offers>",
     "subheadline": "NeedCollab est la plateforme qui met en relation clients et fournisseurs pour concrétiser vos projets.",
     "exploreMarketplace": "Explorer la marketplace",
     "startFree": "Commencer gratuitement",
     "exploreNeeds": "Explorer les besoins",
     "howItWorks": "Comment ça marche",
+    "howItWorksDesc": "En 4 étapes simples, trouvez le partenaire idéal pour votre projet.",
     "readyToCollaborate": "Prêt à collaborer ?",
-    "joinProfessionals": "Rejoignez des centaines de professionnels sur NeedCollab",
-    "createAccount": "Créer un compte",
+    "joinProfessionals": "Rejoignez des centaines de professionnels sur NeedCollab et concrétisez vos projets.",
+    "createAccount": "Créer un compte gratuitement",
+    "stats": {
+      "professionals": "Professionnels",
+      "needs": "Besoins publiés",
+      "satisfaction": "Satisfaction"
+    },
     "features": {
       "publishNeeds": { "title": "Publiez vos besoins", "desc": "Décrivez précisément ce que vous recherchez et recevez des offres personnalisées." },
       "proposeOffers": { "title": "Proposez vos offres", "desc": "Répondez aux besoins avec des propositions détaillées et compétitives." },
