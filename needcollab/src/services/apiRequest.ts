@@ -1,6 +1,6 @@
 import encryptionService from './encryptionService';
 import cacheService from './cacheService';
-import { API_URL, BEARER_TOKEN, API_KEY } from '@/config/environment';
+import { API_URL, BEARER_TOKEN, API_KEY, API_INTERNAL_TOKEN } from '@/config/environment';
 
 class ApiRequestService {
   async request<T = unknown>(endpoint: string, options: RequestInit = {}, ttl = 300000): Promise<T> {
@@ -22,6 +22,7 @@ class ApiRequestService {
       'apikey': API_KEY,
       'Content-Type': 'application/json',
       'Prefer': 'return=representation',
+      'x-internal-token': API_INTERNAL_TOKEN,
       ...(options.headers as Record<string, string> || {}),
     };
 

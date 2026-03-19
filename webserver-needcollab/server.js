@@ -6,13 +6,24 @@ const encryptResponse = require('./middleware/encryptResponse');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const API_INTERNAL_TOKEN = process.env.API_INTERNAL_TOKEN;
+
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Prefer, apikey, x-client-info');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Prefer, apikey, x-client-info, x-internal-token');
   
   if (req.method === 'OPTIONS') {
     return res.sendStatus(200);
+  }
+  next();
+});
+
+app.use((req, res, next) => {
+  if (req.path === '/' || req.path === '/api' || req.path.startsWith('/api-docs')) return next();
+  const token = req.headers['x-internal-token'];
+  if (!API_INTERNAL_TOKEN || token !== API_INTERNAL_TOKEN) {
+    return res.status(401).json({ error: 'Unauthorized' });
   }
   next();
 });
