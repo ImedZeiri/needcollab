@@ -38,15 +38,22 @@
     "rights": "© 2026 NeedCollab. All rights reserved."
   },
   "index": {
+    "badge": "B2B Collaborative Platform",
     "headline": "Connect your <needs>needs</needs> to the best <offers>offers</offers>",
     "subheadline": "NeedCollab is the platform that connects clients and vendors to bring your projects to life.",
     "exploreMarketplace": "Explore marketplace",
     "startFree": "Get started for free",
     "exploreNeeds": "Explore needs",
     "howItWorks": "How it works",
+    "howItWorksDesc": "In 4 simple steps, find the ideal partner for your project.",
     "readyToCollaborate": "Ready to collaborate?",
-    "joinProfessionals": "Join hundreds of professionals on NeedCollab",
-    "createAccount": "Create an account",
+    "joinProfessionals": "Join hundreds of professionals on NeedCollab and bring your projects to life.",
+    "createAccount": "Create a free account",
+    "stats": {
+      "professionals": "Professionals",
+      "needs": "Needs posted",
+      "satisfaction": "Satisfaction"
+    },
     "features": {
       "publishNeeds": { "title": "Post your needs", "desc": "Describe precisely what you are looking for and receive personalized offers." },
       "proposeOffers": { "title": "Propose your offers", "desc": "Respond to needs with detailed and competitive proposals." },
