@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 
-const SUPABASE_URL = 'https://jrhrpebhmmtxccsqrokl.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpyaHJwZWJobW10eGNjc3Fyb2tsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4NjA2NzAsImV4cCI6MjA4ODQzNjY3MH0.NbH3_ypmZH-MoPwqEvPMjHkkd8sL8XHKtHOVux3g04E';
+const SUPABASE_URL = 'https://iogwknftoxufdyqgdksd.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlvZ3drbmZ0b3h1ZmR5cWdka3NkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5NTg4NjgsImV4cCI6MjA4OTUzNDg2OH0.YmwIJzl0XTogDFpmwIY8OpAUOho2G_qQQeNIcrfJGmc';
 
 async function callEdgeFunction(functionName, method, body = null, queryParams = {}) {
   const url = new URL(`${SUPABASE_URL}/functions/v1/${functionName}`);
