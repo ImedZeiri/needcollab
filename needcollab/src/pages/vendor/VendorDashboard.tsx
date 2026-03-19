@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { FileText, Package, MessageSquare, TrendingUp } from 'lucide-react';
+import { FileText, Package, Users, TrendingUp } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 import { getNeeds, getOffers, getCollaborations } from '@/services/api';
@@ -15,13 +15,14 @@ export default function VendorDashboard() {
   const { t } = useTranslation();
 
   useEffect(() => {
-    getNeeds().then(d => setNeeds((Array.isArray(d) ? d : []).filter(n => n.status === 'open'))).catch(() => {});
+    getNeeds().then(d => setNeeds((Array.isArray(d) ? d : []).filter(n => n.status === 'published'))).catch(() => {});
     getOffers().then(d => {
       const all = Array.isArray(d) ? d : [];
-      setMyOffers(all.filter(o => o.vendorId === user?.id));
+      setMyOffers(all.filter(o => o.vendor_id === user?.id));
     }).catch(() => {});
     getCollaborations().then(d => {
-      setActiveCollabs((Array.isArray(d) ? d : []).filter(c => c.vendorId === user?.id && c.status === 'active'));
+      // Collaborations where the user is a participant on a need they have an offer for
+      setActiveCollabs((Array.isArray(d) ? d : []).filter(c => c.user_id === user?.id));
     }).catch(() => {});
   }, [user?.id]);
 
@@ -30,7 +31,7 @@ export default function VendorDashboard() {
 
   const stats = [
     { label: t('vendor.dashboard.myOffers'), value: myOffers.length, icon: Package, color: 'text-primary' },
-    { label: t('vendor.dashboard.collaborations'), value: activeCollabs.length, icon: MessageSquare, color: 'text-accent' },
+    { label: t('vendor.dashboard.collaborations'), value: activeCollabs.length, icon: Users, color: 'text-accent' },
     { label: t('vendor.dashboard.openNeeds'), value: needs.length, icon: FileText, color: 'text-warning' },
     { label: t('vendor.dashboard.acceptanceRate'), value: acceptanceRate, icon: TrendingUp, color: 'text-success' },
   ];
@@ -60,11 +61,15 @@ export default function VendorDashboard() {
             <CardContent className="flex items-center justify-between p-4">
               <div>
                 <p className="font-medium">{need.title}</p>
-                <p className="text-sm text-muted-foreground">{need.category} · {need.location}</p>
+                <p className="text-sm text-muted-foreground">{t(`categories.${need.category}`)}</p>
               </div>
               <div className="text-right">
-                <p className="font-semibold text-primary">{need.budget?.toLocaleString()} {need.currency}</p>
-                <Badge variant="outline" className="text-xs">{need.offersCount} {t('needs.offers')}</Badge>
+                {(need.budget_min || need.budget_max) && (
+                  <p className="font-semibold text-primary">
+                    {need.budget_min?.toLocaleString()}{need.budget_max ? ` – ${need.budget_max.toLocaleString()}` : ''} €
+                  </p>
+                )}
+                <Badge variant="outline" className="text-xs">{need.min_participants}+ {t('needs.participants')}</Badge>
               </div>
             </CardContent>
           </Card>

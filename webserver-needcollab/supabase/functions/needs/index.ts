@@ -13,32 +13,43 @@ Deno.serve(async (req) => {
   const { method } = req;
   const url = new URL(req.url);
   const id = url.searchParams.get('id');
+  const creator_id = url.searchParams.get('creator_id');
 
   try {
     switch (method) {
-      case 'GET':
-        const { data: getResult, error: getError } = id
-          ? await supabase.from('needs').select('*').eq('id', id).single()
-          : await supabase.from('needs').select('*');
-        if (getError) throw getError;
-        return new Response(JSON.stringify(getResult), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 });
+      case 'GET': {
+        let query = supabase.from('needs').select('*, creator:profiles(full_name, avatar_url)');
+        if (id) {
+          const { data, error } = await query.eq('id', id).single();
+          if (error) throw error;
+          return new Response(JSON.stringify(data), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 });
+        }
+        if (creator_id) query = query.eq('creator_id', creator_id);
+        query = query.order('created_at', { ascending: false });
+        const { data, error } = await query;
+        if (error) throw error;
+        return new Response(JSON.stringify(data), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 });
+      }
 
-      case 'POST':
+      case 'POST': {
         const postBody = await req.json();
-        const { data: postResult, error: postError } = await supabase.from('needs').insert(postBody).select();
-        if (postError) throw postError;
-        return new Response(JSON.stringify(postResult), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 201 });
+        const { data, error } = await supabase.from('needs').insert(postBody).select('*, creator:profiles(full_name, avatar_url)');
+        if (error) throw error;
+        return new Response(JSON.stringify(data), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 201 });
+      }
 
-      case 'PUT':
+      case 'PUT': {
         const putBody = await req.json();
-        const { data: putResult, error: putError } = await supabase.from('needs').update(putBody).eq('id', id).select();
-        if (putError) throw putError;
-        return new Response(JSON.stringify(putResult), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 });
+        const { data, error } = await supabase.from('needs').update(putBody).eq('id', id).select('*, creator:profiles(full_name, avatar_url)');
+        if (error) throw error;
+        return new Response(JSON.stringify(data), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 });
+      }
 
-      case 'DELETE':
-        const { error: deleteError } = await supabase.from('needs').delete().eq('id', id);
-        if (deleteError) throw deleteError;
+      case 'DELETE': {
+        const { error } = await supabase.from('needs').delete().eq('id', id);
+        if (error) throw error;
         return new Response(JSON.stringify({ success: true }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 });
+      }
 
       default:
         return new Response('Method not allowed', { headers: corsHeaders, status: 405 });

@@ -13,15 +13,18 @@ Deno.serve(async (req) => {
   const { method } = req;
   const url = new URL(req.url);
   const id = url.searchParams.get('id');
+  const user_id = url.searchParams.get('user_id');
 
   try {
     switch (method) {
-      case 'GET':
-        const { data: getResult, error: getError } = id
-          ? await supabase.from('notifications').select('*').eq('id', id).single()
-          : await supabase.from('notifications').select('*');
+      case 'GET': {
+        let query = supabase.from('notifications').select('*').order('created_at', { ascending: false });
+        if (id) query = query.eq('id', id);
+        else if (user_id) query = query.eq('user_id', user_id);
+        const { data: getResult, error: getError } = await query;
         if (getError) throw getError;
         return new Response(JSON.stringify(getResult), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 });
+      }
 
       case 'POST':
         const postBody = await req.json();

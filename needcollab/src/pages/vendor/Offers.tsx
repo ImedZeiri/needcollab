@@ -1,7 +1,7 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Plus, Edit, Trash2 } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
@@ -18,7 +18,7 @@ export default function Offers() {
 
   useEffect(() => {
     getOffers()
-      .then(data => setOffers((Array.isArray(data) ? data : []).filter(o => o.vendorId === user?.id)))
+      .then(data => setOffers((Array.isArray(data) ? data : []).filter(o => o.vendor_id === user?.id)))
       .catch(() => setOffers([]))
       .finally(() => setLoading(false));
   }, [user?.id]);
@@ -50,16 +50,14 @@ export default function Offers() {
             <Card key={offer.id}>
               <CardContent className="flex items-start justify-between p-6">
                 <div>
-                  <h3 className="font-semibold">{offer.title}</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">{offer.description}</p>
-                  <p className="mt-2 text-xs text-muted-foreground">{t('vendor.offers.delivery')} : {offer.deliveryTime}</p>
+                  <p className="text-sm text-muted-foreground">{offer.message || offer.delivery_description}</p>
+                  {offer.delivery_days && <p className="mt-2 text-xs text-muted-foreground">{t('vendor.offers.delivery')} : {offer.delivery_days} {t('needDetail.days')}</p>}
                 </div>
                 <div className="flex items-center gap-2">
-                  <p className="text-lg font-bold text-primary">{offer.price?.toLocaleString()} {offer.currency}</p>
+                  <p className="text-lg font-bold text-primary">{offer.price_total?.toLocaleString()} €</p>
                   <Badge variant={offer.status === 'accepted' ? 'default' : 'outline'}>
                     {t(`vendor.offers.status.${offer.status}`)}
                   </Badge>
-                  <Button variant="ghost" size="icon"><Edit className="h-4 w-4" /></Button>
                   <Button variant="ghost" size="icon" onClick={() => handleDelete(offer.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
                 </div>
               </CardContent>

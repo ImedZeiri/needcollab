@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, MapPin, ThumbsUp, MessageSquare, Plus } from 'lucide-react';
+import { Search, Users, Plus } from 'lucide-react';
 import { CATEGORIES } from '@/data/mockData';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -54,7 +54,7 @@ export default function NeedsList() {
           <SelectTrigger className="w-full md:w-48"><SelectValue placeholder={t('needs.category')} /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">{t('needs.allCategories')}</SelectItem>
-            {CATEGORIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+            {CATEGORIES.map(c => <SelectItem key={c} value={c}>{t(`categories.${c}`)}</SelectItem>)}
           </SelectContent>
         </Select>
       </div>
@@ -69,24 +69,21 @@ export default function NeedsList() {
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between gap-2">
                     <CardTitle className="text-lg leading-tight">{need.title}</CardTitle>
-                    <span className={`inline-flex shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${need.status === 'open' ? 'bg-success/10 text-success' : need.status === 'in_progress' ? 'bg-warning/10 text-warning' : 'bg-muted text-muted-foreground'}`}>
+                    <span className={`inline-flex shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${need.status === 'published' ? 'bg-success/10 text-success' : need.status === 'in_progress' ? 'bg-warning/10 text-warning' : 'bg-muted text-muted-foreground'}`}>
                       {t(`needs.status.${need.status}`)}
                     </span>
                   </div>
-                  <Badge variant="outline" className="w-fit text-xs">{need.category}</Badge>
+                  <Badge variant="outline" className="w-fit text-xs">{t(`categories.${need.category}`)}</Badge>
                 </CardHeader>
                 <CardContent>
                   <p className="mb-4 line-clamp-2 text-sm text-muted-foreground">{need.description}</p>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="font-semibold text-primary">{need.budget?.toLocaleString()} {need.currency}</span>
-                    <div className="flex items-center gap-3 text-muted-foreground">
-                      <span className="flex items-center gap-1"><MapPin className="h-3 w-3" />{need.location}</span>
-                    </div>
-                  </div>
-                  <div className="mt-3 flex items-center gap-4 border-t border-border pt-3 text-xs text-muted-foreground">
-                    <span className="flex items-center gap-1"><MessageSquare className="h-3 w-3" />{need.offersCount} {t('needs.offers')}</span>
-                    <span className="flex items-center gap-1"><ThumbsUp className="h-3 w-3" />{need.votesCount} {t('needs.votes')}</span>
-                    <span className="ml-auto">{need.authorName}</span>
+                    {(need.budget_min || need.budget_max) && (
+                      <span className="font-semibold text-primary">
+                        {need.budget_min?.toLocaleString()}{need.budget_max ? ` – ${need.budget_max.toLocaleString()}` : ''} €
+                      </span>
+                    )}
+                    <span className="flex items-center gap-1 text-muted-foreground"><Users className="h-3 w-3" />{need.min_participants}+</span>
                   </div>
                 </CardContent>
               </Card>

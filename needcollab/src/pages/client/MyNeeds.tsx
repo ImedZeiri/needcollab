@@ -18,7 +18,7 @@ export default function MyNeeds() {
 
   useEffect(() => {
     getNeeds()
-      .then(data => setNeeds((Array.isArray(data) ? data : []).filter(n => n.authorId === user?.id)))
+      .then(data => setNeeds((Array.isArray(data) ? data : []).filter(n => n.creator_id === user?.id)))
       .catch(() => setNeeds([]))
       .finally(() => setLoading(false));
   }, [user?.id]);
@@ -61,8 +61,12 @@ export default function MyNeeds() {
               <CardContent>
                 <p className="mb-3 text-sm text-muted-foreground">{need.description}</p>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="font-medium">{need.budget?.toLocaleString()} {need.currency}</span>
-                  <span className="text-muted-foreground">{need.offersCount} {t('needs.offers')} · {need.votesCount} {t('needs.votes')}</span>
+                  {(need.budget_min || need.budget_max) && (
+                    <span className="font-medium">
+                      {need.budget_min?.toLocaleString()}{need.budget_max ? ` – ${need.budget_max.toLocaleString()}` : ''} €
+                    </span>
+                  )}
+                  <span className="text-muted-foreground">{need.min_participants}+ {t('needs.participants')}</span>
                 </div>
                 <Link to={`/needs/${need.id}`}>
                   <Button variant="link" className="mt-2 p-0">{t('myNeeds.viewDetails')}</Button>

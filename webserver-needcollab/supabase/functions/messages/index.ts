@@ -13,32 +13,31 @@ Deno.serve(async (req) => {
   const { method } = req;
   const url = new URL(req.url);
   const id = url.searchParams.get('id');
+  const need_id = url.searchParams.get('need_id');
 
   try {
     switch (method) {
-      case 'GET':
-        const { data: getResult, error: getError } = id
-          ? await supabase.from('messages').select('*').eq('id', id).single()
-          : await supabase.from('messages').select('*');
-        if (getError) throw getError;
-        return new Response(JSON.stringify(getResult), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 });
+      case 'GET': {
+        let query = supabase.from('messages').select('*, sender:profiles(full_name, avatar_url)');
+        if (id) query = query.eq('id', id);
+        else if (need_id) query = query.eq('need_id', need_id).order('created_at', { ascending: true });
+        const { data, error } = await query;
+        if (error) throw error;
+        return new Response(JSON.stringify(data), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 });
+      }
 
-      case 'POST':
+      case 'POST': {
         const postBody = await req.json();
-        const { data: postResult, error: postError } = await supabase.from('messages').insert(postBody).select();
-        if (postError) throw postError;
-        return new Response(JSON.stringify(postResult), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 201 });
+        const { data, error } = await supabase.from('messages').insert(postBody).select('*, sender:profiles(full_name, avatar_url)');
+        if (error) throw error;
+        return new Response(JSON.stringify(data?.[0] ?? data), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 201 });
+      }
 
-      case 'PUT':
-        const putBody = await req.json();
-        const { data: putResult, error: putError } = await supabase.from('messages').update(putBody).eq('id', id).select();
-        if (putError) throw putError;
-        return new Response(JSON.stringify(putResult), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 });
-
-      case 'DELETE':
-        const { error: deleteError } = await supabase.from('messages').delete().eq('id', id);
-        if (deleteError) throw deleteError;
+      case 'DELETE': {
+        const { error } = await supabase.from('messages').delete().eq('id', id);
+        if (error) throw error;
         return new Response(JSON.stringify({ success: true }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 });
+      }
 
       default:
         return new Response('Method not allowed', { headers: corsHeaders, status: 405 });

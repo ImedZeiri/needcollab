@@ -1,5 +1,4 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -34,14 +33,14 @@ export default function CollaborationList() {
             <Card key={collab.id}>
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg">{collab.needTitle}</CardTitle>
-                  <Badge>{t(`collaborations.status.${collab.status}`)}</Badge>
+                  <CardTitle className="text-lg">{collab.need?.title || collab.need_id}</CardTitle>
+                  {collab.need && <span className="text-sm text-muted-foreground">{t(`needs.status.${collab.need.status}`)}</span>}
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="mb-3 text-sm text-muted-foreground">{t('collaborations.vendor')} : {collab.vendorName}</p>
-                <p className="text-xs text-muted-foreground">{t('collaborations.startedOn')} {new Date(collab.createdAt).toLocaleDateString(i18n.language === 'fr' ? 'fr-FR' : 'en-US')}</p>
-                <Link to={`/chat/${collab.id}`}>
+                {collab.location_city && <p className="mb-2 text-sm text-muted-foreground">{collab.location_city}, {collab.location_country}</p>}
+                <p className="text-xs text-muted-foreground">{t('collaborations.joinedOn')} {new Date(collab.joined_at).toLocaleDateString(i18n.language === 'fr' ? 'fr-FR' : 'en-US')}</p>
+                <Link to={`/chat/${collab.need_id}`}>
                   <Button variant="outline" className="mt-3" size="sm"><MessageSquare className="mr-2 h-4 w-4" />{t('collaborations.openChat')}</Button>
                 </Link>
               </CardContent>

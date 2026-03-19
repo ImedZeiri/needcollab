@@ -14,7 +14,7 @@ export default function CreateOffer() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { user } = useAuth();
-  const [form, setForm] = useState({ title: '', description: '', price: '', deliveryTime: '' });
+  const [form, setForm] = useState({ message: '', delivery_description: '', price_total: '', delivery_days: '' });
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
 
@@ -23,12 +23,12 @@ export default function CreateOffer() {
     setLoading(true);
     try {
       await createOffer({
-        ...form,
-        price: Number(form.price),
-        currency: 'EUR',
-        vendorId: user?.id,
-        vendorName: user?.name,
-        needId: searchParams.get('needId') || undefined,
+        price_total: Number(form.price_total),
+        delivery_days: form.delivery_days ? Number(form.delivery_days) : null,
+        delivery_description: form.delivery_description || null,
+        message: form.message || null,
+        vendor_id: user?.id,
+        need_id: searchParams.get('needId') || undefined,
         status: 'pending',
       });
       toast.success(t('vendor.createOffer.successToast'));
@@ -48,21 +48,21 @@ export default function CreateOffer() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="title">{t('vendor.createOffer.offerTitle')}</Label>
-              <Input id="title" value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))} required />
+              <Label htmlFor="message">{t('vendor.createOffer.message')}</Label>
+              <Textarea id="message" value={form.message} onChange={e => setForm(p => ({ ...p, message: e.target.value }))} rows={4} />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="desc">{t('vendor.createOffer.description')}</Label>
-              <Textarea id="desc" value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} rows={4} required />
+              <Label htmlFor="delivery_desc">{t('vendor.createOffer.deliveryDescription')}</Label>
+              <Textarea id="delivery_desc" value={form.delivery_description} onChange={e => setForm(p => ({ ...p, delivery_description: e.target.value }))} rows={2} />
             </div>
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="price">{t('vendor.createOffer.price')}</Label>
-                <Input id="price" type="number" value={form.price} onChange={e => setForm(p => ({ ...p, price: e.target.value }))} required />
+                <Label htmlFor="price_total">{t('vendor.createOffer.priceTotal')}</Label>
+                <Input id="price_total" type="number" value={form.price_total} onChange={e => setForm(p => ({ ...p, price_total: e.target.value }))} required />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="delivery">{t('vendor.createOffer.deliveryTime')}</Label>
-                <Input id="delivery" value={form.deliveryTime} onChange={e => setForm(p => ({ ...p, deliveryTime: e.target.value }))} placeholder={t('vendor.createOffer.deliveryPlaceholder')} required />
+                <Label htmlFor="delivery_days">{t('vendor.createOffer.deliveryDays')}</Label>
+                <Input id="delivery_days" type="number" value={form.delivery_days} onChange={e => setForm(p => ({ ...p, delivery_days: e.target.value }))} placeholder="14" />
               </div>
             </div>
             <div className="flex gap-3 pt-4">

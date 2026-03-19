@@ -18,7 +18,7 @@ const { callEdgeFunction } = require('./supabaseClient');
  *         description: Liste des besoins
  */
 router.get('/', async (req, res) => {
-  const { data, status } = await callEdgeFunction('needs', 'GET', null, { id: req.query.id });
+  const { data, status } = await callEdgeFunction('needs', 'GET', null, { id: req.query.id, creator_id: req.query.creator_id });
   res.status(status).json(data);
 });
 
