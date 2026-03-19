@@ -7,6 +7,11 @@ on:
     paths:
       - 'webserver-needcollab/**'
 
+env:
+  SUPABASE_PROJECT_REF: iwojzczrbozwfqulfwsa
+  SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml3b2p6Y3pyYm96d2ZxdWxmd3NhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5NTc5MDEsImV4cCI6MjA4OTUzMzkwMX0.zt_Ds0rv52lqX6d7emmcWhz13q9k6T9_wSlbigsaTxg
+  SUPABASE_PUBLISHABLE_KEY: sb_publishable_sdT7nJlVrJHdyt-ZpmOOKQ_fp48dIKE
+
 jobs:
   deploy-migrations:
     name: Run DB Migrations
@@ -24,8 +29,6 @@ jobs:
           supabase db push --db-url "${{ secrets.SUPABASE_DB_URL }}"
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
 
   deploy-functions:
     name: Deploy Edge Functions
@@ -45,10 +48,8 @@ jobs:
             func=$(basename "$dir")
             if [ "$func" != "_shared" ]; then
               echo "Deploying function: $func"
-              supabase functions deploy "$func" --project-ref ${{ secrets.SUPABASE_PROJECT_REF }}
+              supabase functions deploy "$func" --project-ref $SUPABASE_PROJECT_REF
             fi
           done
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
