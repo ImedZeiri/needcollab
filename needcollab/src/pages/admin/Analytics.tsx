@@ -1,18 +1,21 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useTranslation } from 'react-i18next';
 
 export default function Analytics() {
+  const { t } = useTranslation();
+
   const data = [
-    { label: 'Nouveaux utilisateurs (7j)', value: 23 },
-    { label: 'Besoins créés (7j)', value: 8 },
-    { label: 'Offres soumises (7j)', value: 15 },
-    { label: 'Collaborations démarrées (7j)', value: 4 },
-    { label: 'Taux de conversion', value: '18%' },
-    { label: 'Temps moyen de réponse', value: '2.3h' },
+    { label: t('admin.analytics.newUsers'), value: 23 },
+    { label: t('admin.analytics.needsCreated'), value: 8 },
+    { label: t('admin.analytics.offersSubmitted'), value: 15 },
+    { label: t('admin.analytics.collabsStarted'), value: 4 },
+    { label: t('admin.analytics.conversionRate'), value: '18%' },
+    { label: t('admin.analytics.avgResponseTime'), value: '2.3h' },
   ];
 
   return (
     <div className="container py-8">
-      <h1 className="mb-6 text-3xl font-bold">Analytics</h1>
+      <h1 className="mb-6 text-3xl font-bold">{t('admin.analytics.title')}</h1>
       <div className="grid gap-4 md:grid-cols-3">
         {data.map(d => (
           <Card key={d.label}>
@@ -23,7 +26,7 @@ export default function Analytics() {
       </div>
       <Card className="mt-8">
         <CardContent className="flex h-64 items-center justify-center p-6">
-          <p className="text-muted-foreground">Graphiques d'analyse — à connecter avec les données réelles de l'API</p>
+          <p className="text-muted-foreground">{t('admin.analytics.chartPlaceholder')}</p>
         </CardContent>
       </Card>
     </div>

@@ -8,52 +8,54 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { CATEGORIES } from '@/data/mockData';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 
 export default function CreateNeed() {
   const navigate = useNavigate();
   const [form, setForm] = useState({ title: '', description: '', category: '', budget: '', location: '' });
+  const { t } = useTranslation();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success('Besoin publié avec succès !');
+    toast.success(t('createNeed.successToast'));
     navigate('/my-needs');
   };
 
   return (
     <div className="container max-w-2xl py-8">
-      <h1 className="mb-6 text-3xl font-bold">Publier un besoin</h1>
+      <h1 className="mb-6 text-3xl font-bold">{t('createNeed.title')}</h1>
       <Card>
-        <CardHeader><CardTitle>Détails du besoin</CardTitle></CardHeader>
+        <CardHeader><CardTitle>{t('createNeed.cardTitle')}</CardTitle></CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="title">Titre</Label>
-              <Input id="title" value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))} placeholder="Ex: Développement site web" required />
+              <Label htmlFor="title">{t('createNeed.needTitle')}</Label>
+              <Input id="title" value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))} placeholder={t('createNeed.titlePlaceholder')} required />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="desc">Description</Label>
-              <Textarea id="desc" value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} placeholder="Décrivez votre besoin en détail..." rows={5} required />
+              <Label htmlFor="desc">{t('createNeed.description')}</Label>
+              <Textarea id="desc" value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} placeholder={t('createNeed.descPlaceholder')} rows={5} required />
             </div>
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label>Catégorie</Label>
+                <Label>{t('createNeed.category')}</Label>
                 <Select value={form.category} onValueChange={v => setForm(p => ({ ...p, category: v }))}>
-                  <SelectTrigger><SelectValue placeholder="Sélectionner" /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder={t('createNeed.selectCategory')} /></SelectTrigger>
                   <SelectContent>{CATEGORIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="budget">Budget (EUR)</Label>
+                <Label htmlFor="budget">{t('createNeed.budget')}</Label>
                 <Input id="budget" type="number" value={form.budget} onChange={e => setForm(p => ({ ...p, budget: e.target.value }))} placeholder="5000" required />
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="location">Localisation</Label>
-              <Input id="location" value={form.location} onChange={e => setForm(p => ({ ...p, location: e.target.value }))} placeholder="Paris, France" />
+              <Label htmlFor="location">{t('createNeed.location')}</Label>
+              <Input id="location" value={form.location} onChange={e => setForm(p => ({ ...p, location: e.target.value }))} placeholder={t('createNeed.locationPlaceholder')} />
             </div>
             <div className="flex gap-3 pt-4">
-              <Button type="submit" className="flex-1">Publier</Button>
-              <Button type="button" variant="outline" onClick={() => navigate(-1)}>Annuler</Button>
+              <Button type="submit" className="flex-1">{t('common.publish')}</Button>
+              <Button type="button" variant="outline" onClick={() => navigate(-1)}>{t('common.cancel')}</Button>
             </div>
           </form>
         </CardContent>

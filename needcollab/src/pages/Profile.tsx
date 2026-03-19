@@ -5,13 +5,15 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { User } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function Profile() {
   const { user } = useAuth();
+  const { t } = useTranslation();
 
   return (
     <div className="container max-w-2xl py-8">
-      <h1 className="mb-6 text-3xl font-bold">Mon Profil</h1>
+      <h1 className="mb-6 text-3xl font-bold">{t('profile.title')}</h1>
       <Card>
         <CardHeader>
           <div className="flex items-center gap-4">
@@ -27,14 +29,14 @@ export default function Profile() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label>Nom</Label>
+            <Label>{t('profile.name')}</Label>
             <Input defaultValue={user?.name} />
           </div>
           <div className="space-y-2">
-            <Label>Email</Label>
+            <Label>{t('profile.email')}</Label>
             <Input defaultValue={user?.email} disabled />
           </div>
-          <Button>Sauvegarder</Button>
+          <Button>{t('common.save')}</Button>
         </CardContent>
       </Card>
     </div>

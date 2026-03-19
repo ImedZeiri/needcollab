@@ -3,6 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Check, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const vendors = [
   { id: '2', name: 'Marie Vendor', email: 'vendor@test.com', company: 'Freelance', verified: true },
@@ -12,19 +13,21 @@ const vendors = [
 ];
 
 export default function VendorsVerification() {
+  const { t } = useTranslation();
+
   return (
     <div className="container py-8">
-      <h1 className="mb-6 text-3xl font-bold">Vérification des vendors</h1>
+      <h1 className="mb-6 text-3xl font-bold">{t('admin.vendors.title')}</h1>
       <Card>
         <CardContent className="p-0">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Nom</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Entreprise</TableHead>
-                <TableHead>Vérifié</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead>{t('admin.vendors.colName')}</TableHead>
+                <TableHead>{t('admin.vendors.colEmail')}</TableHead>
+                <TableHead>{t('admin.vendors.colCompany')}</TableHead>
+                <TableHead>{t('admin.vendors.colVerified')}</TableHead>
+                <TableHead>{t('admin.vendors.colActions')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -35,7 +38,7 @@ export default function VendorsVerification() {
                   <TableCell>{v.company}</TableCell>
                   <TableCell>
                     <Badge variant={v.verified ? 'default' : 'destructive'}>
-                      {v.verified ? 'Vérifié' : 'Non vérifié'}
+                      {v.verified ? t('admin.vendors.verified') : t('admin.vendors.notVerified')}
                     </Badge>
                   </TableCell>
                   <TableCell>

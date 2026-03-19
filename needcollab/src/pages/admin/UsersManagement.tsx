@@ -3,6 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { useTranslation } from 'react-i18next';
 
 const mockUsers = [
   { id: '1', name: 'Jean Client', email: 'client@test.com', role: 'client', status: 'active' },
@@ -14,19 +15,21 @@ const mockUsers = [
 ];
 
 export default function UsersManagement() {
+  const { t } = useTranslation();
+
   return (
     <div className="container py-8">
-      <h1 className="mb-6 text-3xl font-bold">Gestion des utilisateurs</h1>
+      <h1 className="mb-6 text-3xl font-bold">{t('admin.users.title')}</h1>
       <Card>
         <CardContent className="p-0">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Nom</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Rôle</TableHead>
-                <TableHead>Statut</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead>{t('admin.users.colName')}</TableHead>
+                <TableHead>{t('admin.users.colEmail')}</TableHead>
+                <TableHead>{t('admin.users.colRole')}</TableHead>
+                <TableHead>{t('admin.users.colStatus')}</TableHead>
+                <TableHead>{t('admin.users.colActions')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -46,11 +49,11 @@ export default function UsersManagement() {
                   </TableCell>
                   <TableCell>
                     <Badge variant={u.status === 'active' ? 'default' : u.status === 'suspended' ? 'destructive' : 'outline'}>
-                      {u.status === 'active' ? 'Actif' : u.status === 'suspended' ? 'Suspendu' : 'En attente'}
+                      {t(`admin.users.status.${u.status}`)}
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <Button variant="ghost" size="sm">Modifier</Button>
+                    <Button variant="ghost" size="sm">{t('admin.users.editBtn')}</Button>
                   </TableCell>
                 </TableRow>
               ))}

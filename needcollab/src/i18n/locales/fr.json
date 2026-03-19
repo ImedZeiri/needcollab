@@ -1,0 +1,253 @@
+{
+  "common": {
+    "save": "Sauvegarder",
+    "cancel": "Annuler",
+    "publish": "Publier",
+    "create": "Créer",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "back": "Retour",
+    "loading": "Chargement...",
+    "search": "Rechercher...",
+    "noResults": "Aucun résultat trouvé.",
+    "new": "Nouveau"
+  },
+  "nav": {
+    "marketplace": "Marketplace",
+    "myNeeds": "Mes Besoins",
+    "publish": "Publier",
+    "dashboard": "Dashboard",
+    "myOffers": "Mes Offres",
+    "admin": "Admin",
+    "profile": "Profil",
+    "login": "Connexion",
+    "register": "Inscription",
+    "logout": "Déconnexion"
+  },
+  "footer": {
+    "tagline": "Plateforme de mise en relation entre clients et fournisseurs.",
+    "platform": "Plateforme",
+    "publishNeed": "Publier un besoin",
+    "support": "Support",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "legal": "Légal",
+    "legalNotice": "Mentions légales",
+    "terms": "CGU",
+    "rights": "© 2026 NeedCollab. Tous droits réservés."
+  },
+  "index": {
+    "headline": "Connectez vos <needs>besoins</needs> aux meilleures <offers>offres</offers>",
+    "subheadline": "NeedCollab est la plateforme qui met en relation clients et fournisseurs pour concrétiser vos projets.",
+    "exploreMarketplace": "Explorer la marketplace",
+    "startFree": "Commencer gratuitement",
+    "exploreNeeds": "Explorer les besoins",
+    "howItWorks": "Comment ça marche",
+    "readyToCollaborate": "Prêt à collaborer ?",
+    "joinProfessionals": "Rejoignez des centaines de professionnels sur NeedCollab",
+    "createAccount": "Créer un compte",
+    "features": {
+      "publishNeeds": { "title": "Publiez vos besoins", "desc": "Décrivez précisément ce que vous recherchez et recevez des offres personnalisées." },
+      "proposeOffers": { "title": "Proposez vos offres", "desc": "Répondez aux besoins avec des propositions détaillées et compétitives." },
+      "collaborate": { "title": "Collaborez facilement", "desc": "Communiquez directement avec vos partenaires via la messagerie intégrée." },
+      "secure": { "title": "Sécurisé & fiable", "desc": "Communications chiffrées et modération active de la plateforme." }
+    }
+  },
+  "notFound": {
+    "message": "Oops! Page introuvable",
+    "returnHome": "Retour à l'accueil"
+  },
+  "profile": {
+    "title": "Mon Profil",
+    "name": "Nom",
+    "email": "Email"
+  },
+  "auth": {
+    "login": {
+      "title": "Connexion",
+      "description": "Connectez-vous avec votre email via OTP",
+      "sendOtp": "Recevoir le code OTP",
+      "sending": "Envoi...",
+      "noAccount": "Pas de compte ?",
+      "testAccounts": "Comptes de test : client@test.com, vendor@test.com, admin@test.com",
+      "codeSentTo": "Un code a été envoyé à",
+      "otpCode": "Code OTP",
+      "verify": "Vérifier",
+      "verifying": "Vérification...",
+      "changeEmail": "Changer d'email"
+    },
+    "register": {
+      "title": "Inscription",
+      "description": "Créez votre compte NeedCollab",
+      "fullName": "Nom complet",
+      "creating": "Création...",
+      "createAccount": "Créer mon compte",
+      "alreadyAccount": "Déjà un compte ?",
+      "roleClient": "Client — Je publie des besoins",
+      "roleVendor": "Vendor — Je propose des offres",
+      "role": "Rôle"
+    },
+    "forgotPassword": {
+      "title": "Mot de passe oublié",
+      "description": "Recevez un lien de réinitialisation",
+      "sendLink": "Envoyer le lien",
+      "backToLogin": "Retour à la connexion",
+      "emailSent": "Un email de réinitialisation a été envoyé à"
+    }
+  },
+  "needs": {
+    "marketplace": "Marketplace",
+    "marketplaceDesc": "Découvrez les besoins et proposez vos offres",
+    "publishNeed": "Publier un besoin",
+    "allCategories": "Toutes catégories",
+    "category": "Catégorie",
+    "noNeedsFound": "Aucun besoin trouvé.",
+    "offers": "offres",
+    "votes": "votes",
+    "status": {
+      "open": "Ouvert",
+      "in_progress": "En cours",
+      "closed": "Fermé"
+    }
+  },
+  "needDetail": {
+    "notFound": "Besoin introuvable.",
+    "backToMarketplace": "Retour à la marketplace",
+    "proposeOffer": "Proposer une offre",
+    "vote": "Voter",
+    "offersCount": "Offres",
+    "noOffers": "Aucune offre pour l'instant.",
+    "delivery": "Livraison",
+    "offerStatus": {
+      "pending": "En attente",
+      "accepted": "Acceptée",
+      "rejected": "Refusée"
+    }
+  },
+  "createNeed": {
+    "title": "Publier un besoin",
+    "cardTitle": "Détails du besoin",
+    "needTitle": "Titre",
+    "description": "Description",
+    "descPlaceholder": "Décrivez votre besoin en détail...",
+    "titlePlaceholder": "Ex: Développement site web",
+    "category": "Catégorie",
+    "selectCategory": "Sélectionner",
+    "budget": "Budget (EUR)",
+    "location": "Localisation",
+    "locationPlaceholder": "Paris, France",
+    "successToast": "Besoin publié avec succès !"
+  },
+  "myNeeds": {
+    "title": "Mes Besoins",
+    "noNeeds": "Aucun besoin publié.",
+    "viewDetails": "Voir les détails →"
+  },
+  "collaborations": {
+    "title": "Mes Collaborations",
+    "noCollabs": "Aucune collaboration active.",
+    "vendor": "Vendor",
+    "startedOn": "Démarré le",
+    "openChat": "Ouvrir le chat",
+    "status": {
+      "active": "Active",
+      "completed": "Terminée",
+      "cancelled": "Annulée"
+    }
+  },
+  "chat": {
+    "with": "Avec",
+    "messagePlaceholder": "Écrire un message..."
+  },
+  "vendor": {
+    "dashboard": {
+      "title": "Dashboard Vendor",
+      "myOffers": "Mes offres",
+      "collaborations": "Collaborations",
+      "openNeeds": "Besoins ouverts",
+      "acceptanceRate": "Taux acceptation",
+      "latestNeeds": "Derniers besoins ouverts"
+    },
+    "offers": {
+      "title": "Mes Offres",
+      "newOffer": "Nouvelle offre",
+      "noOffers": "Aucune offre pour l'instant.",
+      "delivery": "Livraison",
+      "status": {
+        "pending": "En attente",
+        "accepted": "Acceptée",
+        "rejected": "Refusée"
+      }
+    },
+    "createOffer": {
+      "title": "Créer une offre",
+      "cardTitle": "Détails de l'offre",
+      "offerTitle": "Titre",
+      "description": "Description",
+      "price": "Prix (EUR)",
+      "deliveryTime": "Délai de livraison",
+      "deliveryPlaceholder": "Ex: 4 semaines",
+      "submit": "Créer l'offre",
+      "successToast": "Offre créée avec succès !"
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Administration",
+      "users": "Utilisateurs",
+      "publishedNeeds": "Besoins publiés",
+      "offers": "Offres",
+      "collaborations": "Collaborations",
+      "pendingModeration": "En attente modération",
+      "verifiedVendors": "Vendors vérifiés"
+    },
+    "moderation": {
+      "title": "Modération des besoins",
+      "colTitle": "Titre",
+      "colAuthor": "Auteur",
+      "colCategory": "Catégorie",
+      "colBudget": "Budget",
+      "colStatus": "Statut",
+      "colActions": "Actions",
+      "status": {
+        "open": "Ouvert",
+        "in_progress": "En cours",
+        "closed": "Fermé"
+      }
+    },
+    "users": {
+      "title": "Gestion des utilisateurs",
+      "colName": "Nom",
+      "colEmail": "Email",
+      "colRole": "Rôle",
+      "colStatus": "Statut",
+      "colActions": "Actions",
+      "editBtn": "Modifier",
+      "status": {
+        "active": "Actif",
+        "suspended": "Suspendu",
+        "pending": "En attente"
+      }
+    },
+    "vendors": {
+      "title": "Vérification des vendors",
+      "colName": "Nom",
+      "colEmail": "Email",
+      "colCompany": "Entreprise",
+      "colVerified": "Vérifié",
+      "colActions": "Actions",
+      "verified": "Vérifié",
+      "notVerified": "Non vérifié"
+    },
+    "analytics": {
+      "title": "Analytics",
+      "newUsers": "Nouveaux utilisateurs (7j)",
+      "needsCreated": "Besoins créés (7j)",
+      "offersSubmitted": "Offres soumises (7j)",
+      "collabsStarted": "Collaborations démarrées (7j)",
+      "conversionRate": "Taux de conversion",
+      "avgResponseTime": "Temps moyen de réponse",
+      "chartPlaceholder": "Graphiques d'analyse — à connecter avec les données réelles de l'API"
+    }
+  }
+}

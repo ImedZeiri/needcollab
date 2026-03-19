@@ -11,18 +11,26 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useTranslation } from 'react-i18next';
 
 export default function Header() {
   const { user, isAuthenticated, logout } = useAuth();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { t, i18n } = useTranslation();
+
+  const toggleLang = () => {
+    const next = i18n.language === 'fr' ? 'en' : 'fr';
+    i18n.changeLanguage(next);
+    localStorage.setItem('lang', next);
+  };
 
   const navLinks = isAuthenticated
     ? [
-        { to: '/needs', label: 'Marketplace' },
-        ...(user?.role === 'client' ? [{ to: '/my-needs', label: 'Mes Besoins' }, { to: '/create', label: 'Publier' }] : []),
-        ...(user?.role === 'vendor' ? [{ to: '/vendor/dashboard', label: 'Dashboard' }, { to: '/vendor/offers', label: 'Mes Offres' }] : []),
-        ...(user?.role === 'admin' ? [{ to: '/admin/dashboard', label: 'Admin' }] : []),
+        { to: '/needs', label: t('nav.marketplace') },
+        ...(user?.role === 'client' ? [{ to: '/my-needs', label: t('nav.myNeeds') }, { to: '/create', label: t('nav.publish') }] : []),
+        ...(user?.role === 'vendor' ? [{ to: '/vendor/dashboard', label: t('nav.dashboard') }, { to: '/vendor/offers', label: t('nav.myOffers') }] : []),
+        ...(user?.role === 'admin' ? [{ to: '/admin/dashboard', label: t('nav.admin') }] : []),
       ]
     : [];
 
@@ -47,6 +55,9 @@ export default function Header() {
         </div>
 
         <div className="flex items-center gap-3">
+          <Button variant="ghost" size="sm" onClick={toggleLang} className="text-xs font-semibold">
+            {i18n.language === 'fr' ? 'EN' : 'FR'}
+          </Button>
           {isAuthenticated ? (
             <>
               <Button variant="ghost" size="icon" className="relative">
@@ -66,16 +77,16 @@ export default function Header() {
                     <Badge variant="outline" className="mt-1 text-[10px]">{user?.role}</Badge>
                   </div>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild><Link to="/profile">Profil</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/profile">{t('nav.profile')}</Link></DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={logout}><LogOut className="mr-2 h-4 w-4" />Déconnexion</DropdownMenuItem>
+                  <DropdownMenuItem onClick={logout}><LogOut className="mr-2 h-4 w-4" />{t('nav.logout')}</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </>
           ) : (
             <div className="flex gap-2">
-              <Button variant="ghost" asChild><Link to="/auth/login">Connexion</Link></Button>
-              <Button asChild><Link to="/auth/register">Inscription</Link></Button>
+              <Button variant="ghost" asChild><Link to="/auth/login">{t('nav.login')}</Link></Button>
+              <Button asChild><Link to="/auth/register">{t('nav.register')}</Link></Button>
             </div>
           )}
           <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setMobileOpen(!mobileOpen)}>

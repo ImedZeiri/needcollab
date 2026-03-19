@@ -8,14 +8,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Search, MapPin, ThumbsUp, MessageSquare, Plus } from 'lucide-react';
 import { mockNeeds, CATEGORIES } from '@/data/mockData';
 import { useState } from 'react';
-
-const statusLabels = { open: 'Ouvert', in_progress: 'En cours', closed: 'Fermé' };
-const statusColors = { open: 'bg-success/10 text-success', in_progress: 'bg-warning/10 text-warning', closed: 'bg-muted text-muted-foreground' };
+import { useTranslation } from 'react-i18next';
 
 export default function NeedsList() {
   const { isAuthenticated } = useAuth();
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('all');
+  const { t } = useTranslation();
 
   const filtered = mockNeeds.filter(n => {
     const matchesSearch = n.title.toLowerCase().includes(search.toLowerCase()) || n.description.toLowerCase().includes(search.toLowerCase());
@@ -27,23 +26,23 @@ export default function NeedsList() {
     <div className="container py-8">
       <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Marketplace</h1>
-          <p className="text-muted-foreground">Découvrez les besoins et proposez vos offres</p>
+          <h1 className="text-3xl font-bold">{t('needs.marketplace')}</h1>
+          <p className="text-muted-foreground">{t('needs.marketplaceDesc')}</p>
         </div>
         {isAuthenticated && (
-          <Button asChild><Link to="/create"><Plus className="mr-2 h-4 w-4" />Publier un besoin</Link></Button>
+          <Button asChild><Link to="/create"><Plus className="mr-2 h-4 w-4" />{t('needs.publishNeed')}</Link></Button>
         )}
       </div>
 
       <div className="mb-6 flex flex-col gap-3 md:flex-row">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Rechercher..." value={search} onChange={e => setSearch(e.target.value)} className="pl-10" />
+          <Input placeholder={t('common.search')} value={search} onChange={e => setSearch(e.target.value)} className="pl-10" />
         </div>
         <Select value={category} onValueChange={setCategory}>
-          <SelectTrigger className="w-full md:w-48"><SelectValue placeholder="Catégorie" /></SelectTrigger>
+          <SelectTrigger className="w-full md:w-48"><SelectValue placeholder={t('needs.category')} /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Toutes catégories</SelectItem>
+            <SelectItem value="all">{t('needs.allCategories')}</SelectItem>
             {CATEGORIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
           </SelectContent>
         </Select>
@@ -56,8 +55,8 @@ export default function NeedsList() {
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between gap-2">
                   <CardTitle className="text-lg leading-tight">{need.title}</CardTitle>
-                  <span className={`inline-flex shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${statusColors[need.status]}`}>
-                    {statusLabels[need.status]}
+                  <span className={`inline-flex shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${need.status === 'open' ? 'bg-success/10 text-success' : need.status === 'in_progress' ? 'bg-warning/10 text-warning' : 'bg-muted text-muted-foreground'}`}>
+                    {t(`needs.status.${need.status}`)}
                   </span>
                 </div>
                 <Badge variant="outline" className="w-fit text-xs">{need.category}</Badge>
@@ -71,8 +70,8 @@ export default function NeedsList() {
                   </div>
                 </div>
                 <div className="mt-3 flex items-center gap-4 border-t border-border pt-3 text-xs text-muted-foreground">
-                  <span className="flex items-center gap-1"><MessageSquare className="h-3 w-3" />{need.offersCount} offres</span>
-                  <span className="flex items-center gap-1"><ThumbsUp className="h-3 w-3" />{need.votesCount} votes</span>
+                  <span className="flex items-center gap-1"><MessageSquare className="h-3 w-3" />{need.offersCount} {t('needs.offers')}</span>
+                  <span className="flex items-center gap-1"><ThumbsUp className="h-3 w-3" />{need.votesCount} {t('needs.votes')}</span>
                   <span className="ml-auto">{need.authorName}</span>
                 </div>
               </CardContent>
@@ -82,7 +81,7 @@ export default function NeedsList() {
       </div>
 
       {filtered.length === 0 && (
-        <div className="py-16 text-center text-muted-foreground">Aucun besoin trouvé.</div>
+        <div className="py-16 text-center text-muted-foreground">{t('needs.noNeedsFound')}</div>
       )}
     </div>
   );

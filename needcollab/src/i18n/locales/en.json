@@ -1,0 +1,253 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "publish": "Publish",
+    "create": "Create",
+    "edit": "Edit",
+    "delete": "Delete",
+    "back": "Back",
+    "loading": "Loading...",
+    "search": "Search...",
+    "noResults": "No results found.",
+    "new": "New"
+  },
+  "nav": {
+    "marketplace": "Marketplace",
+    "myNeeds": "My Needs",
+    "publish": "Publish",
+    "dashboard": "Dashboard",
+    "myOffers": "My Offers",
+    "admin": "Admin",
+    "profile": "Profile",
+    "login": "Login",
+    "register": "Sign Up",
+    "logout": "Logout"
+  },
+  "footer": {
+    "tagline": "Platform connecting clients and vendors to bring your projects to life.",
+    "platform": "Platform",
+    "publishNeed": "Post a need",
+    "support": "Support",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "legal": "Legal",
+    "legalNotice": "Legal Notice",
+    "terms": "Terms of Service",
+    "rights": "© 2026 NeedCollab. All rights reserved."
+  },
+  "index": {
+    "headline": "Connect your <needs>needs</needs> to the best <offers>offers</offers>",
+    "subheadline": "NeedCollab is the platform that connects clients and vendors to bring your projects to life.",
+    "exploreMarketplace": "Explore marketplace",
+    "startFree": "Get started for free",
+    "exploreNeeds": "Explore needs",
+    "howItWorks": "How it works",
+    "readyToCollaborate": "Ready to collaborate?",
+    "joinProfessionals": "Join hundreds of professionals on NeedCollab",
+    "createAccount": "Create an account",
+    "features": {
+      "publishNeeds": { "title": "Post your needs", "desc": "Describe precisely what you are looking for and receive personalized offers." },
+      "proposeOffers": { "title": "Propose your offers", "desc": "Respond to needs with detailed and competitive proposals." },
+      "collaborate": { "title": "Collaborate easily", "desc": "Communicate directly with your partners via the integrated messaging." },
+      "secure": { "title": "Secure & reliable", "desc": "Encrypted communications and active platform moderation." }
+    }
+  },
+  "notFound": {
+    "message": "Oops! Page not found",
+    "returnHome": "Return to Home"
+  },
+  "profile": {
+    "title": "My Profile",
+    "name": "Name",
+    "email": "Email"
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "description": "Sign in with your email via OTP",
+      "sendOtp": "Receive OTP code",
+      "sending": "Sending...",
+      "noAccount": "No account?",
+      "testAccounts": "Test accounts: client@test.com, vendor@test.com, admin@test.com",
+      "codeSentTo": "A code was sent to",
+      "otpCode": "OTP Code",
+      "verify": "Verify",
+      "verifying": "Verifying...",
+      "changeEmail": "Change email"
+    },
+    "register": {
+      "title": "Sign Up",
+      "description": "Create your NeedCollab account",
+      "fullName": "Full name",
+      "creating": "Creating...",
+      "createAccount": "Create my account",
+      "alreadyAccount": "Already have an account?",
+      "roleClient": "Client — I post needs",
+      "roleVendor": "Vendor — I propose offers",
+      "role": "Role"
+    },
+    "forgotPassword": {
+      "title": "Forgot password",
+      "description": "Receive a reset link",
+      "sendLink": "Send link",
+      "backToLogin": "Back to login",
+      "emailSent": "A reset email was sent to"
+    }
+  },
+  "needs": {
+    "marketplace": "Marketplace",
+    "marketplaceDesc": "Discover needs and propose your offers",
+    "publishNeed": "Post a need",
+    "allCategories": "All categories",
+    "category": "Category",
+    "noNeedsFound": "No needs found.",
+    "offers": "offers",
+    "votes": "votes",
+    "status": {
+      "open": "Open",
+      "in_progress": "In progress",
+      "closed": "Closed"
+    }
+  },
+  "needDetail": {
+    "notFound": "Need not found.",
+    "backToMarketplace": "Back to marketplace",
+    "proposeOffer": "Propose an offer",
+    "vote": "Vote",
+    "offersCount": "Offers",
+    "noOffers": "No offers yet.",
+    "delivery": "Delivery",
+    "offerStatus": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "rejected": "Rejected"
+    }
+  },
+  "createNeed": {
+    "title": "Post a need",
+    "cardTitle": "Need details",
+    "needTitle": "Title",
+    "description": "Description",
+    "descPlaceholder": "Describe your need in detail...",
+    "titlePlaceholder": "E.g: Website development",
+    "category": "Category",
+    "selectCategory": "Select",
+    "budget": "Budget (EUR)",
+    "location": "Location",
+    "locationPlaceholder": "Paris, France",
+    "successToast": "Need posted successfully!"
+  },
+  "myNeeds": {
+    "title": "My Needs",
+    "noNeeds": "No needs posted.",
+    "viewDetails": "View details →"
+  },
+  "collaborations": {
+    "title": "My Collaborations",
+    "noCollabs": "No active collaborations.",
+    "vendor": "Vendor",
+    "startedOn": "Started on",
+    "openChat": "Open chat",
+    "status": {
+      "active": "Active",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    }
+  },
+  "chat": {
+    "with": "With",
+    "messagePlaceholder": "Write a message..."
+  },
+  "vendor": {
+    "dashboard": {
+      "title": "Vendor Dashboard",
+      "myOffers": "My offers",
+      "collaborations": "Collaborations",
+      "openNeeds": "Open needs",
+      "acceptanceRate": "Acceptance rate",
+      "latestNeeds": "Latest open needs"
+    },
+    "offers": {
+      "title": "My Offers",
+      "newOffer": "New offer",
+      "noOffers": "No offers yet.",
+      "delivery": "Delivery",
+      "status": {
+        "pending": "Pending",
+        "accepted": "Accepted",
+        "rejected": "Rejected"
+      }
+    },
+    "createOffer": {
+      "title": "Create an offer",
+      "cardTitle": "Offer details",
+      "offerTitle": "Title",
+      "description": "Description",
+      "price": "Price (EUR)",
+      "deliveryTime": "Delivery time",
+      "deliveryPlaceholder": "E.g: 4 weeks",
+      "submit": "Create offer",
+      "successToast": "Offer created successfully!"
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Administration",
+      "users": "Users",
+      "publishedNeeds": "Published needs",
+      "offers": "Offers",
+      "collaborations": "Collaborations",
+      "pendingModeration": "Pending moderation",
+      "verifiedVendors": "Verified vendors"
+    },
+    "moderation": {
+      "title": "Needs moderation",
+      "colTitle": "Title",
+      "colAuthor": "Author",
+      "colCategory": "Category",
+      "colBudget": "Budget",
+      "colStatus": "Status",
+      "colActions": "Actions",
+      "status": {
+        "open": "Open",
+        "in_progress": "In progress",
+        "closed": "Closed"
+      }
+    },
+    "users": {
+      "title": "Users management",
+      "colName": "Name",
+      "colEmail": "Email",
+      "colRole": "Role",
+      "colStatus": "Status",
+      "colActions": "Actions",
+      "editBtn": "Edit",
+      "status": {
+        "active": "Active",
+        "suspended": "Suspended",
+        "pending": "Pending"
+      }
+    },
+    "vendors": {
+      "title": "Vendors verification",
+      "colName": "Name",
+      "colEmail": "Email",
+      "colCompany": "Company",
+      "colVerified": "Verified",
+      "colActions": "Actions",
+      "verified": "Verified",
+      "notVerified": "Not verified"
+    },
+    "analytics": {
+      "title": "Analytics",
+      "newUsers": "New users (7d)",
+      "needsCreated": "Needs created (7d)",
+      "offersSubmitted": "Offers submitted (7d)",
+      "collabsStarted": "Collaborations started (7d)",
+      "conversionRate": "Conversion rate",
+      "avgResponseTime": "Average response time",
+      "chartPlaceholder": "Analytics charts — to be connected with real API data"
+    }
+  }
+}

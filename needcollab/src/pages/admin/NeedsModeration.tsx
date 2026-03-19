@@ -4,22 +4,25 @@ import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Check, X } from 'lucide-react';
 import { mockNeeds } from '@/data/mockData';
+import { useTranslation } from 'react-i18next';
 
 export default function NeedsModeration() {
+  const { t } = useTranslation();
+
   return (
     <div className="container py-8">
-      <h1 className="mb-6 text-3xl font-bold">Modération des besoins</h1>
+      <h1 className="mb-6 text-3xl font-bold">{t('admin.moderation.title')}</h1>
       <Card>
         <CardContent className="p-0">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Titre</TableHead>
-                <TableHead>Auteur</TableHead>
-                <TableHead>Catégorie</TableHead>
-                <TableHead>Budget</TableHead>
-                <TableHead>Statut</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead>{t('admin.moderation.colTitle')}</TableHead>
+                <TableHead>{t('admin.moderation.colAuthor')}</TableHead>
+                <TableHead>{t('admin.moderation.colCategory')}</TableHead>
+                <TableHead>{t('admin.moderation.colBudget')}</TableHead>
+                <TableHead>{t('admin.moderation.colStatus')}</TableHead>
+                <TableHead>{t('admin.moderation.colActions')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -30,7 +33,7 @@ export default function NeedsModeration() {
                   <TableCell><Badge variant="outline">{n.category}</Badge></TableCell>
                   <TableCell>{n.budget.toLocaleString()} {n.currency}</TableCell>
                   <TableCell>
-                    <Badge>{n.status === 'open' ? 'Ouvert' : n.status === 'in_progress' ? 'En cours' : 'Fermé'}</Badge>
+                    <Badge>{t(`admin.moderation.status.${n.status}`)}</Badge>
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-1">

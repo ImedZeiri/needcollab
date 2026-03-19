@@ -3,34 +3,37 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowRight, Search, Handshake, MessageSquare, Shield } from 'lucide-react';
-
-const features = [
-  { icon: Search, title: 'Publiez vos besoins', desc: 'Décrivez précisément ce que vous recherchez et recevez des offres personnalisées.' },
-  { icon: Handshake, title: 'Proposez vos offres', desc: 'Répondez aux besoins avec des propositions détaillées et compétitives.' },
-  { icon: MessageSquare, title: 'Collaborez facilement', desc: 'Communiquez directement avec vos partenaires via la messagerie intégrée.' },
-  { icon: Shield, title: 'Sécurisé & fiable', desc: 'Communications chiffrées et modération active de la plateforme.' },
-];
+import { useTranslation } from 'react-i18next';
 
 const Index = () => {
   const { isAuthenticated } = useAuth();
+  const { t } = useTranslation();
+
+  const features = [
+    { icon: Search, title: t('index.features.publishNeeds.title'), desc: t('index.features.publishNeeds.desc') },
+    { icon: Handshake, title: t('index.features.proposeOffers.title'), desc: t('index.features.proposeOffers.desc') },
+    { icon: MessageSquare, title: t('index.features.collaborate.title'), desc: t('index.features.collaborate.desc') },
+    { icon: Shield, title: t('index.features.secure.title'), desc: t('index.features.secure.desc') },
+  ];
 
   return (
     <div>
       <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-accent/5 px-4 py-24 md:py-32">
         <div className="container text-center">
           <h1 className="mx-auto max-w-3xl text-4xl font-extrabold tracking-tight md:text-6xl">
-            Connectez vos <span className="text-primary">besoins</span> aux meilleures <span className="text-accent">offres</span>
+            {t('index.headline', {
+              needs: (chunks: string) => <span className="text-primary">{chunks}</span>,
+              offers: (chunks: string) => <span className="text-accent">{chunks}</span>,
+            })}
           </h1>
-          <p className="mx-auto mt-6 max-w-xl text-lg text-muted-foreground">
-            NeedCollab est la plateforme qui met en relation clients et fournisseurs pour concrétiser vos projets.
-          </p>
+          <p className="mx-auto mt-6 max-w-xl text-lg text-muted-foreground">{t('index.subheadline')}</p>
           <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             {isAuthenticated ? (
-              <Button asChild size="lg"><Link to="/needs">Explorer la marketplace <ArrowRight className="ml-2 h-4 w-4" /></Link></Button>
+              <Button asChild size="lg"><Link to="/needs">{t('index.exploreMarketplace')} <ArrowRight className="ml-2 h-4 w-4" /></Link></Button>
             ) : (
               <>
-                <Button asChild size="lg"><Link to="/auth/register">Commencer gratuitement <ArrowRight className="ml-2 h-4 w-4" /></Link></Button>
-                <Button asChild variant="outline" size="lg"><Link to="/needs">Explorer les besoins</Link></Button>
+                <Button asChild size="lg"><Link to="/auth/register">{t('index.startFree')} <ArrowRight className="ml-2 h-4 w-4" /></Link></Button>
+                <Button asChild variant="outline" size="lg"><Link to="/needs">{t('index.exploreNeeds')}</Link></Button>
               </>
             )}
           </div>
@@ -38,7 +41,7 @@ const Index = () => {
       </section>
 
       <section className="container py-20">
-        <h2 className="mb-12 text-center text-3xl font-bold">Comment ça marche</h2>
+        <h2 className="mb-12 text-center text-3xl font-bold">{t('index.howItWorks')}</h2>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {features.map(f => (
             <Card key={f.title} className="text-center">
@@ -56,9 +59,9 @@ const Index = () => {
 
       <section className="bg-primary/5 py-16">
         <div className="container text-center">
-          <h2 className="text-2xl font-bold">Prêt à collaborer ?</h2>
-          <p className="mt-2 text-muted-foreground">Rejoignez des centaines de professionnels sur NeedCollab</p>
-          <Button asChild size="lg" className="mt-6"><Link to="/auth/register">Créer un compte</Link></Button>
+          <h2 className="text-2xl font-bold">{t('index.readyToCollaborate')}</h2>
+          <p className="mt-2 text-muted-foreground">{t('index.joinProfessionals')}</p>
+          <Button asChild size="lg" className="mt-6"><Link to="/auth/register">{t('index.createAccount')}</Link></Button>
         </div>
       </section>
     </div>
