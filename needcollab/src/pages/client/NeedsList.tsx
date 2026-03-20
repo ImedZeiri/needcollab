@@ -65,7 +65,12 @@ export default function NeedsList() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {filtered.map(need => (
             <Link key={need.id} to={`/needs/${need.id}`}>
-              <Card className="h-full transition-shadow hover:shadow-md">
+              <Card className="h-full overflow-hidden transition-shadow hover:shadow-md">
+                {need.image_url && (
+                  <div className="h-40 w-full overflow-hidden">
+                    <img src={need.image_url} alt={need.title} className="h-full w-full object-cover transition-transform duration-300 hover:scale-105" />
+                  </div>
+                )}
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between gap-2">
                     <CardTitle className="text-lg leading-tight">{need.title}</CardTitle>

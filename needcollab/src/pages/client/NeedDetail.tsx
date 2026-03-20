@@ -44,7 +44,12 @@ export default function NeedDetail() {
         <ArrowLeft className="h-4 w-4" />{t('needDetail.backToMarketplace')}
       </Link>
 
-      <Card className="mb-8">
+      <Card className="mb-8 overflow-hidden">
+        {need.image_url && (
+          <div className="h-64 w-full overflow-hidden">
+            <img src={need.image_url} alt={need.title} className="h-full w-full object-cover" />
+          </div>
+        )}
         <CardHeader>
           <div className="flex items-start justify-between gap-4">
             <div>
