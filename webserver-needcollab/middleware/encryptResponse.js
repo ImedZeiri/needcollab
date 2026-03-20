@@ -3,6 +3,8 @@
  * Compatible with the client-side EncryptionService
  */
 
+const ENCRYPTION_SECRET = process.env.ENCRYPTION_SECRET || 'secret-key';
+
 function getTimeSlot() {
   return Math.floor(Date.now() / 60000);
 }
@@ -12,7 +14,6 @@ function getRandomSalt() {
 }
 
 function toBase64(str) {
-  // Convert string to Buffer using 'binary' encoding to preserve raw bytes
   return Buffer.from(str, 'binary').toString('base64')
     .replace(/\+/g, '-')
     .replace(/\//g, '_')
@@ -20,8 +21,7 @@ function toBase64(str) {
 }
 
 function generateKey(timeSlot, salt) {
-  // Generate the same key format as the client
-  return Buffer.from(`${timeSlot}-${salt}-secret-key`).toString('base64');
+  return Buffer.from(`${timeSlot}-${salt}-${ENCRYPTION_SECRET}`).toString('base64');
 }
 
 function xorCipherToBytes(text, key) {

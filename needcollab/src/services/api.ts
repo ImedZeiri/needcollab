@@ -33,6 +33,6 @@ export const getProfile = (id: string) => api.get<Profile>(`profiles?id=${id}`);
 export const updateProfile = (id: string, body: Partial<Profile>) => api.put<Profile>(`profiles?id=${id}`, body);
 
 // Auth
-export const sendAuthEmail = (email: string) => api.post('send-auth-email', { email });
-export const verifyOtpCode = (id: string) => api.get(`otp_codes?id=${id}`);
+export const sendAuthEmail = (email: string) => api.post('send-auth-email', { email, action: 'send' });
+export const verifyOtpCode = (email: string, code: string) => api.post('send-auth-email', { email, action: 'verify', code });
 export const createOtpCode = (body: object) => api.post('otp_codes', body);

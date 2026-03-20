@@ -1,3 +1,5 @@
+const ENCRYPTION_SECRET = process.env.ENCRYPTION_SECRET || 'secret-key';
+
 function getTimeSlot() {
   return Math.floor(Date.now() / 60000);
 }
@@ -5,11 +7,11 @@ function getTimeSlot() {
 function fromBase64(str) {
   const standard = str.replace(/-/g, '+').replace(/_/g, '/');
   const padded = standard + '=='.slice(0, (4 - standard.length % 4) % 4);
-  return Buffer.from(padded, 'base64').toString('utf-8');
+  return Buffer.from(padded, 'base64').toString('binary');
 }
 
 function generateKey(timeSlot, salt) {
-  return Buffer.from(`${timeSlot}-${salt}-secret-key`).toString('base64');
+  return Buffer.from(`${timeSlot}-${salt}-${ENCRYPTION_SECRET}`).toString('base64');
 }
 
 function xorCipher(text, key) {
@@ -20,10 +22,8 @@ function xorCipher(text, key) {
   return result;
 }
 
-function decrypt(encrypted) {
-  const timeSlot = getTimeSlot();
+function tryDecrypt(encrypted, timeSlot) {
   const decoded = fromBase64(encrypted);
-
   if (decoded.includes('|')) {
     const pipeIndex = decoded.indexOf('|');
     const salt = decoded.slice(0, pipeIndex);
@@ -31,9 +31,25 @@ function decrypt(encrypted) {
     const key = generateKey(timeSlot, salt);
     return xorCipher(data, key);
   }
-
   const key = generateKey(timeSlot, '');
   return xorCipher(decoded, key);
+}
+
+function decrypt(encrypted) {
+  const currentSlot = getTimeSlot();
+  // Try current slot and ±2 minutes to handle clock skew
+  for (let offset = 0; offset <= 2; offset++) {
+    try {
+      const result = tryDecrypt(encrypted, currentSlot - offset);
+      // Valid decrypted endpoint looks like "send-auth-email" or "needs?id=..."
+      if (result && /^[a-zA-Z0-9_\-/?=&]+$/.test(result.trim())) {
+        return result.trim();
+      }
+    } catch {
+      continue;
+    }
+  }
+  throw new Error('Failed to decrypt endpoint after trying multiple time slots');
 }
 
 function decryptEndpoint(req, res, next) {

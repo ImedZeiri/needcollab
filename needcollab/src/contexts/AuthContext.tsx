@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
-import { sendAuthEmail, verifyOtpCode } from '@/services/api';
+import { sendAuthEmail, verifyOtpCode, getProfile } from '@/services/api';
+import type { Profile } from '@/types';
 
 export type UserRole = 'client' | 'vendor' | 'admin';
 
@@ -44,18 +45,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const result = await verifyOtpCode(code) as any;
-      const profile = Array.isArray(result) ? result[0] : result;
-      if (!profile) throw new Error('Invalid OTP');
+      const result = await verifyOtpCode(email, code) as any;
+      if (!result?.success) throw new Error('Invalid OTP');
+
+      const userId = result.user_id;
+      let profile: Profile | null = null;
+      try {
+        profile = await getProfile(userId) as Profile;
+      } catch {
+        // profile may not exist yet
+      }
+
       const loggedUser: User = {
-        id: profile.user_id || profile.id || crypto.randomUUID(),
-        email: profile.email || email,
-        name: profile.full_name || profile.name || email.split('@')[0],
-        role: (profile.role as UserRole) || 'client',
-        avatar: profile.avatar_url,
+        id: userId,
+        email: profile?.email || email,
+        name: profile?.full_name || email.split('@')[0],
+        role: profile?.is_vendor ? 'vendor' : 'client',
+        avatar: profile?.avatar_url ?? undefined,
       };
       setUser(loggedUser);
       localStorage.setItem(USER_KEY, JSON.stringify(loggedUser));
+
+      // If server returned a magic link, follow it to establish Supabase session
+      if (result.action_link) {
+        window.location.href = result.action_link;
+      }
     } finally {
       setLoading(false);
     }
