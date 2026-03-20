@@ -5,9 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, Users, Plus } from 'lucide-react';
+import { Search, Users, Plus, X } from 'lucide-react';
 import { CATEGORIES } from '@/data/mockData';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getNeeds } from '@/services/api';
 import type { Need } from '@/types';
@@ -18,7 +18,16 @@ export default function NeedsList() {
   const [category, setCategory] = useState('all');
   const [needs, setNeeds] = useState<Need[]>([]);
   const [loading, setLoading] = useState(true);
+  const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
   const { t } = useTranslation();
+
+  const closeLightbox = useCallback(() => setLightboxUrl(null), []);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') closeLightbox(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [closeLightbox]);
 
   useEffect(() => {
     getNeeds()
@@ -67,8 +76,11 @@ export default function NeedsList() {
             <Link key={need.id} to={`/needs/${need.id}`}>
               <Card className="h-full overflow-hidden transition-shadow hover:shadow-md">
                 {need.image_url && (
-                  <div className="h-40 w-full overflow-hidden">
-                    <img src={need.image_url} alt={need.title} className="h-full w-full object-cover transition-transform duration-300 hover:scale-105" />
+                  <div
+                    className="relative h-40 w-full cursor-zoom-in overflow-hidden"
+                    onClick={e => { e.preventDefault(); setLightboxUrl(need.image_url!); }}
+                  >
+                    <img src={need.image_url} alt={need.title} className="absolute inset-0 h-full w-full object-contain transition-transform duration-300 hover:scale-105" />
                   </div>
                 )}
                 <CardHeader className="pb-3">
@@ -99,6 +111,26 @@ export default function NeedsList() {
 
       {!loading && filtered.length === 0 && (
         <div className="py-16 text-center text-muted-foreground">{t('needs.noNeedsFound')}</div>
+      )}
+
+      {lightboxUrl && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
+          onClick={closeLightbox}
+        >
+          <button
+            className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
+            onClick={closeLightbox}
+          >
+            <X className="h-6 w-6" />
+          </button>
+          <img
+            src={lightboxUrl}
+            alt=""
+            className="max-h-[90vh] max-w-[90vw] rounded-lg object-contain shadow-2xl"
+            onClick={e => e.stopPropagation()}
+          />
+        </div>
       )}
     </div>
   );

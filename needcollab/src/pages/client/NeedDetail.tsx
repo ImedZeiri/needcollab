@@ -2,9 +2,9 @@ import { useParams, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Calendar, ThumbsUp, User } from 'lucide-react';
+import { ArrowLeft, Calendar, ThumbsUp, User, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getNeed, getOffers } from '@/services/api';
 import type { Need, Offer } from '@/types';
 
@@ -13,7 +13,16 @@ export default function NeedDetail() {
   const [need, setNeed] = useState<Need | null>(null);
   const [offers, setOffers] = useState<Offer[]>([]);
   const [loading, setLoading] = useState(true);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
   const { t, i18n } = useTranslation();
+
+  const closeLightbox = useCallback(() => setLightboxOpen(false), []);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') closeLightbox(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [closeLightbox]);
 
   useEffect(() => {
     if (!id) return;
@@ -46,8 +55,11 @@ export default function NeedDetail() {
 
       <Card className="mb-8 overflow-hidden">
         {need.image_url && (
-          <div className="h-64 w-full overflow-hidden">
-            <img src={need.image_url} alt={need.title} className="h-full w-full object-cover" />
+          <div
+            className="relative h-64 w-full cursor-zoom-in overflow-hidden"
+            onClick={() => setLightboxOpen(true)}
+          >
+            <img src={need.image_url} alt={need.title} className="absolute inset-0 h-full w-full object-contain" />
           </div>
         )}
         <CardHeader>
@@ -107,6 +119,26 @@ export default function NeedDetail() {
               </CardContent>
             </Card>
           ))}
+        </div>
+      )}
+
+      {lightboxOpen && need.image_url && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
+          onClick={closeLightbox}
+        >
+          <button
+            className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
+            onClick={closeLightbox}
+          >
+            <X className="h-6 w-6" />
+          </button>
+          <img
+            src={need.image_url}
+            alt={need.title}
+            className="max-h-[90vh] max-w-[90vw] rounded-lg object-contain shadow-2xl"
+            onClick={e => e.stopPropagation()}
+          />
         </div>
       )}
     </div>
