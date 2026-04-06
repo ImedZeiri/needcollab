@@ -29,9 +29,9 @@ export default function NeedsModeration() {
               {mockNeeds.map(n => (
                 <TableRow key={n.id}>
                   <TableCell className="font-medium">{n.title}</TableCell>
-                  <TableCell>{n.authorName}</TableCell>
+                  <TableCell>{n.creator?.full_name ?? '—'}</TableCell>
                   <TableCell><Badge variant="outline">{n.category}</Badge></TableCell>
-                  <TableCell>{n.budget.toLocaleString()} {n.currency}</TableCell>
+                  <TableCell>{n.budget_min != null ? `${n.budget_min.toLocaleString()}–${n.budget_max?.toLocaleString() ?? '?'} MAD` : '—'}</TableCell>
                   <TableCell>
                     <Badge>{t(`admin.moderation.status.${n.status}`)}</Badge>
                   </TableCell>

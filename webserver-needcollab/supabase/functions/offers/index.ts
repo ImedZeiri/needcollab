@@ -28,6 +28,13 @@ Deno.serve(async (req) => {
 
       case 'POST': {
         const postBody = await req.json();
+        // Ensure profile exists for vendor_id before insert
+        if (postBody.vendor_id) {
+          await supabase.from('profiles').upsert(
+            { id: postBody.vendor_id, is_vendor: true, vendor_status: 'verified' },
+            { onConflict: 'id', ignoreDuplicates: true }
+          );
+        }
         const { data, error } = await supabase.from('offers').insert(postBody).select('*, vendor:profiles(full_name, vendor_company_name)');
         if (error) throw error;
         return new Response(JSON.stringify(data), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 201 });

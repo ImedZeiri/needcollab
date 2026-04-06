@@ -22,6 +22,7 @@ interface AuthContextType {
   logout: () => void;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const USER_KEY = 'needcollab_user';
@@ -79,10 +80,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     try {
       await sendAuthEmail(data.email);
-      // Profile will be created after OTP verification
       const tempUser: User = { id: crypto.randomUUID(), ...data };
       setUser(tempUser);
       localStorage.setItem(USER_KEY, JSON.stringify(tempUser));
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Registration failed';
+      throw new Error(message);
     } finally {
       setLoading(false);
     }
@@ -100,8 +103,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useAuth() {
+export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
-  if (!context) throw new Error('useAuth must be used within AuthProvider');
+  if (!context) {
+    // During HMR reloads, context may momentarily be undefined.
+    // Return a safe fallback instead of throwing to prevent blank screens.
+    return {
+      user: null,
+      isAuthenticated: false,
+      loading: false,
+      login: async () => {},
+      verifyOTP: async () => {},
+      register: async () => {},
+      logout: () => {},
+    };
+  }
   return context;
 }

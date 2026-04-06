@@ -32,7 +32,9 @@ export default function CreateNeed() {
         budget_max: form.budget_max ? Number(form.budget_max) : null,
         creator_id: user?.id,
         status: 'published',
-      });
+        _email: user?.email,
+        _name: user?.name,
+      } as any);
       toast.success(t('createNeed.successToast'));
       navigate('/my-needs');
     } catch {

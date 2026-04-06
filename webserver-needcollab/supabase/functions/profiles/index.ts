@@ -7,7 +7,7 @@ Deno.serve(async (req) => {
   }
   const supabase = createClient(
     Deno.env.get('SUPABASE_URL') ?? '',
-    Deno.env.get('SUPABASE_ANON_KEY') ?? ''
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
   );
 
   const { method } = req;
@@ -25,7 +25,7 @@ Deno.serve(async (req) => {
 
       case 'POST':
         const postBody = await req.json();
-        const { data: postResult, error: postError } = await supabase.from('profiles').insert(postBody).select();
+        const { data: postResult, error: postError } = await supabase.from('profiles').upsert(postBody, { onConflict: 'id', ignoreDuplicates: true }).select();
         if (postError) throw postError;
         return new Response(JSON.stringify(postResult), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 201 });
 

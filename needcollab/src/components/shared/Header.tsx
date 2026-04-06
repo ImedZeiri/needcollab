@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Bell, Compass, Globe, LogOut, Menu, User, X, Plus, LayoutDashboard, Package, ShieldCheck } from 'lucide-react';
+import { Bell, Compass, Globe, LogOut, Menu, Moon, Sun, User, X, Plus, LayoutDashboard, Package, ShieldCheck } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useTranslation } from 'react-i18next';
 import logoImg from '@/assets/logo.png';
+import { useTheme } from '@/hooks/useTheme';
 
 const LANGUAGES = [
   { code: 'fr', label: 'Français', flag: '🇫🇷' },
@@ -25,6 +26,7 @@ export default function Header() {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { t, i18n } = useTranslation();
+  const { theme, toggleTheme } = useTheme();
 
   const currentLang = LANGUAGES.find(l => l.code === i18n.language) || LANGUAGES[0];
 
@@ -101,6 +103,17 @@ export default function Header() {
 
           {/* Right actions */}
           <div className="flex items-center gap-1.5">
+            {/* Dark mode toggle */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground"
+              onClick={toggleTheme}
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </Button>
+
             {/* Language */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

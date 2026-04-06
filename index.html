@@ -8,6 +8,10 @@
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module">
+      // Root index.html — Vite uses needcollab/index.html as the actual entry.
+      // This file should not be served in normal operation.
+      window.location.replace('/');
+    </script>
   </body>
 </html>

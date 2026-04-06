@@ -25,11 +25,11 @@ class ApiRequestService {
     const url = `${baseUrl}/e/${encryptedEndpoint}`;
 
     const headers: Record<string, string> = {
-      'Authorization': `Bearer ${BEARER_TOKEN}`,
-      'apikey': API_KEY,
       'Content-Type': 'application/json',
       'Prefer': 'return=representation',
       'x-internal-token': generateInternalToken(),
+      ...(BEARER_TOKEN ? { 'Authorization': `Bearer ${BEARER_TOKEN}` } : {}),
+      ...(API_KEY ? { 'apikey': API_KEY } : {}),
       ...(options.headers as Record<string, string> || {}),
     };
 

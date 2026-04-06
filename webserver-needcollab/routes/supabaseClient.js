@@ -20,7 +20,14 @@ async function callEdgeFunction(functionName, method, body = null, queryParams =
   }
 
   const response = await fetch(url.toString(), options);
-  const data = await response.json();
+  const text = await response.text();
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch {
+    console.error(`Edge function ${functionName} returned non-JSON:`, text.substring(0, 200));
+    throw new Error(`Edge function ${functionName} returned non-JSON response (status ${response.status})`);
+  }
   return { data, status: response.status };
 }
 

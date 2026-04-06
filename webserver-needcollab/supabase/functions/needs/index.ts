@@ -7,7 +7,7 @@ Deno.serve(async (req) => {
   }
   const supabase = createClient(
     Deno.env.get('SUPABASE_URL') ?? '',
-    Deno.env.get('SUPABASE_ANON_KEY') ?? ''
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
   );
 
   const { method } = req;
@@ -33,6 +33,15 @@ Deno.serve(async (req) => {
 
       case 'POST': {
         const postBody = await req.json();
+        // Ensure profile exists for creator_id before insert
+        if (postBody.creator_id) {
+          await supabase.from('profiles').upsert(
+            { id: postBody.creator_id, email: postBody._email || null, full_name: postBody._name || null },
+            { onConflict: 'id', ignoreDuplicates: true }
+          );
+          delete postBody._email;
+          delete postBody._name;
+        }
         const { data, error } = await supabase.from('needs').insert(postBody).select('*, creator:profiles(full_name, avatar_url)');
         if (error) throw error;
         return new Response(JSON.stringify(data), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 201 });

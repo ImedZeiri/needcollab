@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useTranslation } from 'react-i18next';
+import { useToast } from '@/hooks/use-toast';
 
 export default function Register() {
   const [name, setName] = useState('');
@@ -15,11 +16,20 @@ export default function Register() {
   const { register, loading } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await register({ email, name, role });
-    navigate('/needs');
+    try {
+      await register({ email, name, role });
+      navigate('/needs');
+    } catch (err: unknown) {
+      toast({
+        variant: 'destructive',
+        title: t('auth.register.errorTitle', 'Erreur'),
+        description: t('auth.register.errorDesc', "Impossible de créer le compte. Vérifiez votre connexion ou réessayez plus tard."),
+      });
+    }
   };
 
   return (
