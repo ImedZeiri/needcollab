@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'webserver-needcollab/**'
+      - '.github/workflows/supabase.yml'
 
 env:
   SUPABASE_PROJECT_REF: iwojzczrbozwfqulfwsa
