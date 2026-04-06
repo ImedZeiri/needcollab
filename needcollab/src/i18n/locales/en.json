@@ -73,8 +73,13 @@
   "auth": {
     "login": {
       "title": "Login",
-      "description": "Sign in with your email via OTP",
+      "description": "Sign in with your email",
+      "methodOtp": "OTP Code",
+      "methodFast": "Magic Link",
       "sendOtp": "Receive OTP code",
+      "sendMagicLink": "Receive login link",
+      "magicLinkSent": "Login link sent!",
+      "magicLinkHint": "Check your inbox and click the link to sign in.",
       "sending": "Sending...",
       "noAccount": "No account?",
       "testAccounts": "Test accounts: client@test.com, vendor@test.com, admin@test.com",

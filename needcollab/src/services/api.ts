@@ -62,12 +62,13 @@ export const sendAuthEmail = async (email: string) => {
   try {
     return await api.post('send-auth-email', { email, action: 'send' });
   } catch (error) {
-    // OTP email sending failed (likely missing RESEND_API_KEY).
-    // Fall back to direct magic-link authentication.
     console.warn('OTP send failed, falling back to direct auth:', error);
     return api.post('send-auth-email', { email, action: 'direct' });
   }
 };
+
+export const sendFastMagicLink = (email: string) =>
+  api.post('send-auth-email', { email, action: 'fast' });
 
 export const verifyOtpCode = (email: string, code: string) => api.post('send-auth-email', { email, action: 'verify', code });
 export const createOtpCode = (body: object) => api.post('otp_codes', body);

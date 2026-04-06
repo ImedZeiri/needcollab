@@ -73,8 +73,13 @@
   "auth": {
     "login": {
       "title": "Connexion",
-      "description": "Connectez-vous avec votre email via OTP",
+      "description": "Connectez-vous avec votre email",
+      "methodOtp": "Code OTP",
+      "methodFast": "Lien rapide",
       "sendOtp": "Recevoir le code OTP",
+      "sendMagicLink": "Recevoir le lien de connexion",
+      "magicLinkSent": "Lien de connexion envoyé !",
+      "magicLinkHint": "Vérifiez votre boîte mail et cliquez sur le lien pour vous connecter.",
       "sending": "Envoi...",
       "noAccount": "Pas de compte ?",
       "testAccounts": "Comptes de test : client@test.com, vendor@test.com, admin@test.com",

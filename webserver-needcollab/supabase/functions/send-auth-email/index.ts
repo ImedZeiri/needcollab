@@ -33,8 +33,8 @@ const corsHeaders = {
 interface AuthEmailRequest {
   /** Adresse email de l'utilisateur */
   email: string;
-  /** Action à effectuer: envoyer OTP, vérifier OTP, ou connexion directe */
-  action: "send" | "verify" | "direct";
+  /** Action à effectuer */
+  action: "send" | "verify" | "direct" | "fast";
   /** Code OTP à vérifier (requis si action === "verify") */
   code?: string;
 }
@@ -94,6 +94,27 @@ const getEmailContent = (otp: string) => {
     `,
   };
 };
+
+const getMagicLinkEmailContent = (link: string, role: string) => ({
+  subject: `Votre lien de connexion CollabAchat`,
+  html: `
+    <!DOCTYPE html>
+    <html>
+      <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+      <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f5f5f5;">
+        <div style="background-color: white; border-radius: 12px; padding: 40px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+          <h1 style="color: #1a1a1a; margin: 0 0 16px; font-size: 24px; text-align:center;">Connexion rapide</h1>
+          <p style="color: #666; font-size: 16px; line-height: 1.6;">Cliquez sur le bouton ci-dessous pour vous connecter à votre compte CollabAchat en tant que <strong>${role}</strong> :</p>
+          <div style="text-align:center; margin: 32px 0;">
+            <a href="${link}" style="background-color:#1a1a1a; color:white; padding:14px 32px; border-radius:8px; text-decoration:none; font-weight:600; font-size:16px;">Se connecter</a>
+          </div>
+          <p style="color: #999; font-size: 14px; text-align: center;">Ce lien expire dans 1 heure.<br>Si vous n'avez pas demandé ce lien, ignorez cet email.</p>
+        </div>
+        <p style="color: #999; font-size: 12px; text-align: center; margin-top: 20px;">© ${new Date().getFullYear()} CollabAchat. Tous droits réservés.</p>
+      </body>
+    </html>
+  `,
+});
 
 // === HANDLER PRINCIPAL ===
 
@@ -280,6 +301,54 @@ const handler = async (req: Request): Promise<Response> => {
           { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
         );
       }
+
+    // === ACTION: FAST (magic link envoyé par email, utilisateur existant uniquement) ===
+    } else if (action === "fast") {
+      const { data: existingUsers } = await supabase.auth.admin.listUsers();
+      const existingUser = existingUsers?.users.find(u => u.email?.toLowerCase() === email.toLowerCase());
+
+      if (!existingUser) {
+        return new Response(
+          JSON.stringify({ error: "Aucun compte trouvé avec cet email." }),
+          { status: 404, headers: { "Content-Type": "application/json", ...corsHeaders } }
+        );
+      }
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("is_vendor")
+        .eq("id", existingUser.id)
+        .maybeSingle();
+
+      const role = profile?.is_vendor ? "Vendor" : "Client";
+
+      const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
+        type: "magiclink",
+        email: email.toLowerCase(),
+        options: { redirectTo: `${req.headers.get("origin") ?? ""}/` },
+      });
+
+      if (linkError || !linkData.properties?.action_link) {
+        throw new Error("Failed to generate magic link");
+      }
+
+      const { subject, html } = getMagicLinkEmailContent(linkData.properties.action_link, role);
+
+      const emailRes = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${RESEND_API_KEY}` },
+        body: JSON.stringify({ from: "CollabAchat <onboarding@resend.dev>", to: [email], subject, html }),
+      });
+
+      if (!emailRes.ok) {
+        const err = await emailRes.json();
+        throw new Error(err.message || "Failed to send magic link email");
+      }
+
+      return new Response(
+        JSON.stringify({ success: true, message: "Magic link sent" }),
+        { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
 
     // === ACTION: CONNEXION DIRECTE (sans OTP, sans email) ===
     } else if (action === "direct") {

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
-import { sendAuthEmail, verifyOtpCode, getProfile } from '@/services/api';
+import { sendAuthEmail, verifyOtpCode, sendFastMagicLink, getProfile } from '@/services/api';
 import type { Profile } from '@/types';
 
 export type UserRole = 'client' | 'vendor' | 'admin';
@@ -18,6 +18,7 @@ interface AuthContextType {
   loading: boolean;
   login: (email: string) => Promise<void>;
   verifyOTP: (email: string, code: string) => Promise<void>;
+  sendMagicLink: (email: string) => Promise<void>;
   register: (data: { email: string; name: string; role: UserRole }) => Promise<void>;
   logout: () => void;
 }
@@ -91,13 +92,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const sendMagicLink = useCallback(async (email: string) => {
+    setLoading(true);
+    try {
+      await sendFastMagicLink(email);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   const logout = useCallback(() => {
     setUser(null);
     localStorage.removeItem(USER_KEY);
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, loading, login, verifyOTP, register, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated: !!user, loading, login, verifyOTP, sendMagicLink, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
@@ -114,6 +124,7 @@ export function useAuth(): AuthContextType {
       loading: false,
       login: async () => {},
       verifyOTP: async () => {},
+      sendMagicLink: async () => {},
       register: async () => {},
       logout: () => {},
     };
