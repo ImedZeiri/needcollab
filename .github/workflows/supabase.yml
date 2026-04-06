@@ -33,7 +33,7 @@ jobs:
       - name: Run migrations
         run: |
           cd webserver-needcollab
-          supabase db push --linked -p "${{ secrets.SUPABASE_DB_PASSWORD }}"
+          supabase db push --linked --use-pgbouncer -p "${{ secrets.SUPABASE_DB_PASSWORD }}"
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
